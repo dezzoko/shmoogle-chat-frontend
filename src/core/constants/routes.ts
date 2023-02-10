@@ -3,4 +3,5 @@ export const routes = {
   welcome: '/welcome',
   chat: '/chat/',
   dm: '/dm/',
+  auth:'/auth',
 };
