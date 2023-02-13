@@ -5,11 +5,17 @@ import App from 'App';
 import { ChatPage } from 'pages/chat-page';
 import { WelcomePage } from 'pages/welcome-page';
 import { DmPage } from 'pages/dm-page';
+import AuthPage from 'pages/auth';
+import AuthRequire from 'components/auth-require';
 
 export const router = createBrowserRouter([
   {
     path: routes.home,
-    element: <App />,
+    element: (
+      <AuthRequire>
+        <App />
+      </AuthRequire>
+    ),
     children: [
       {
         element: <WelcomePage />,
@@ -25,6 +31,12 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: 'auth/',
+    element: <AuthPage />,
+  },
+
   {
     path: routes.welcome,
     element: <Navigate to={routes.home} />,

@@ -11,7 +11,7 @@ import { ThemeProvider } from 'styled-components';
 
 function App() {
   const dispatch = useAppDispatch();
-  localStorage.setItem(USER_TOKEN, '1');
+  // localStorage.setItem(USER_TOKEN, '1');
   const [theme] = useAppTheme();
   useEffect(() => {
     dispatch(userActions.fetchLoggedUser());

@@ -10,7 +10,12 @@ export class UserService implements IUserService {
       username: 'BeastMaster64',
       statusId: 1,
     },
-    { id: 2, login: 'qwerty2@gmail.com', username: 'Alex Fras', statusId: 2 },
+    {
+      id: 2,
+      login: 'qwerty2@gmail.com',
+      username: 'Alex Fras',
+      statusId: 2,
+    },
     {
       id: 3,
       login: 'qwerty3@gmail.com',
@@ -23,7 +28,12 @@ export class UserService implements IUserService {
       username: 'John Travolta',
       statusId: 2,
     },
-    { id: 5, login: 'qwerty5@gmail.com', username: 'Bruce Lee', statusId: 1 },
+    {
+      id: 5,
+      login: 'qwerty5@gmail.com',
+      username: 'Bruce Lee',
+      statusId: 1,
+    },
     {
       id: 6,
       login: 'qwerty6@gmail.com',
@@ -78,4 +88,14 @@ export class UserService implements IUserService {
     this.users.splice(index, 1);
     return true;
   }
+async login (login:string,password:string){
+  const user = this.users.find((u)=>u.login===login);
+  if(!user){
+    throw new Error("Электронная почта или пароль неправильные");
+
+  }
+  return user.id;
+
+}
+
 }
