@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useId, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useId, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
 import { routes } from 'core/constants/routes';
@@ -14,19 +14,16 @@ import {
   ChatPageBodyOptions,
   ChatPageBodyContent,
 } from './styled';
-
-enum ChatPageOption {
-  chat = 1,
-  files,
-  tasks,
-}
+import ChatFiles from 'components/chat/chat-files';
+import { ChatPageOption, chatRoomActions } from 'shared/store/reducers/chat-room.slice';
+import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 
 function renderSwitch(option: ChatPageOption, chat: Chat) {
   switch (option) {
     case ChatPageOption.chat:
       return <ChatRoom chat={chat}></ChatRoom>;
     case ChatPageOption.files:
-      return <></>;
+      return <ChatFiles chat={chat}></ChatFiles>;
     case ChatPageOption.tasks:
       return <></>;
     default:
@@ -38,13 +35,24 @@ export const ChatPage: FC = () => {
   const radioName = useId();
   const { id } = useParams();
   const { chats } = useAppSelector((state) => state.userReducer);
-  const [currentOption, setCurrentOption] = useState(ChatPageOption.chat);
+  const { messageId, currentOption } = useAppSelector((state) => state.chatRoomReducer);
+  const dispatch = useAppDispatch();
+  const { setCurrentOption, setHighlightedMessage } = chatRoomActions;
 
+  useEffect(() => {
+    if (messageId) {
+      dispatch(setCurrentOption(ChatPageOption.chat));
+    }
+  }, [messageId]);
   const onOptionChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (+value in ChatPageOption) {
-      setCurrentOption(+value);
+      dispatch(setCurrentOption(+value));
     }
+  };
+
+  const findFileMessage = (m: number) => {
+    console.log();
   };
 
   if (!id) {
@@ -57,7 +65,6 @@ export const ChatPage: FC = () => {
   }
 
   if (!chat.isGroup) {
-    console.log('AGA');
     return <Navigate to={`${routes.dm}${id}`} />;
   }
 
@@ -78,7 +85,7 @@ export const ChatPage: FC = () => {
             <OptionRadio
               name={radioName}
               value={ChatPageOption.files}
-              //checked={currentOption === ChatPageOption.files}
+              checked={currentOption === ChatPageOption.files}
               onChange={onOptionChangeHandler}
             >
               Файлы
@@ -86,7 +93,7 @@ export const ChatPage: FC = () => {
             <OptionRadio
               name={radioName}
               value={ChatPageOption.tasks}
-              //checked={currentOption === ChatPageOption.tasks}
+              checked={currentOption === ChatPageOption.tasks}
               onChange={onOptionChangeHandler}
             >
               Задачи

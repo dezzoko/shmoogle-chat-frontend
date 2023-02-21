@@ -39,7 +39,6 @@ const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
           return (
             <div key={message.id}>
               {showDate ? <MessageDate>{date}</MessageDate> : <></>}
-
               <MessageListItem message={message} onlyText={isStacked} isManager={false} />
               <MessageListItemResponses message={message} />
             </div>

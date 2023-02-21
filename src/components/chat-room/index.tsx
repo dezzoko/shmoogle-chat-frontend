@@ -34,9 +34,9 @@ async function addMessage(instance: CreateMessageDto) {
 const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
   const { chat } = props;
   const { user } = useAppSelector((state) => state.userReducer);
-
   const [messages, setMessages] = useState<Message[]>([]);
   const [formText, setFormText] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
   const [scrolledProgress, setScrolledProgress] = useState(100);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -71,8 +71,12 @@ const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
     setFormText(value);
   };
 
+  const filesHandler = (value: File[]) => {
+    setFiles(value);
+  };
+
   const sendClickHandler = () => {
-    const instance = { chatId: chat.id, text: formText, user: user! };
+    const instance: CreateMessageDto = { chatId: chat.id, text: formText, user: user!, file: files };
     addMessage(instance).then((msg) => {
       setMessages([...messages, msg]);
     });
@@ -90,7 +94,7 @@ const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
         </ChatRoomScrollDownButton>
       </ChatRoomViewBox>
       <ChatRoomFormContainer showShadow={scrolledProgress < 90}>
-        <ChatRoomForm onChange={formTextHandler} onSendClick={sendClickHandler} />
+        <ChatRoomForm onChange={formTextHandler} onSendClick={sendClickHandler} onChangeFiles={filesHandler} />
       </ChatRoomFormContainer>
     </StyledChatRoom>
   );

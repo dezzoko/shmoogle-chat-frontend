@@ -51,7 +51,7 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
   };
 
   const addButtonClickHandler = () => {
-    setMenuHidden(false);
+    setMenuHidden(!isMenuHidden);
   };
 
   return (

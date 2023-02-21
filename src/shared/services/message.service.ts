@@ -1,5 +1,5 @@
+import { File } from 'core/entities/file.entity';
 import { Message } from '../../core/entities/message.entity';
-import { User } from '../../core/entities/user.entity';
 import { CreateMessageDto, IMessageService, UpdateMessageDto } from '../../core/interfaces/message-service.interface';
 import { getAvailableId } from '../utils/get-available-id';
 import { UserService } from './user.service';
@@ -15,6 +15,7 @@ export class MessageService implements IMessageService {
       text: 'text',
       creationDate: new Date().toString(),
       responses: [],
+      files: [new File(1, 1, 'test.exe'), new File(2, 1, 'test.zip')],
       isModified: false,
     },
     {
@@ -24,6 +25,7 @@ export class MessageService implements IMessageService {
       text: "Sooo, let's check how that works? :->",
       creationDate: new Date().toString(),
       responses: [],
+      files: [new File(1, 1, 'test3.exe')],
       isModified: false,
     },
     {
@@ -48,7 +50,7 @@ export class MessageService implements IMessageService {
   ];
 
   private static instance: MessageService;
-
+  private fileReader = new FileReader();
   public static get Instance() {
     if (!this.instance) {
       this.instance = new this();
@@ -66,6 +68,15 @@ export class MessageService implements IMessageService {
         const msg = this.messages[message.responseToId! - 1];
         msg.responses.push(message);
       });
+  }
+  //TODO: Create fileService
+  async readImageURLs(file: any): Promise<string> {
+    return new Promise((res) => {
+      this.fileReader.readAsDataURL(file);
+      this.fileReader.onloadend = () => {
+        res(this.fileReader.result!.toString());
+      };
+    });
   }
 
   async getAll(chatId?: number) {
@@ -108,7 +119,7 @@ export class MessageService implements IMessageService {
 
     const { text, file } = data;
     message.text = text ?? message.text;
-    message.file = file ?? message.file;
+    message.files = file ?? message.files;
     message.isModified = true;
 
     return message;

@@ -1,5 +1,5 @@
-import { User } from "./user.entity";
-
+import { User } from './user.entity';
+import { File } from './file.entity';
 // TODO: find or create file type
 export class Message {
   constructor(
@@ -9,8 +9,8 @@ export class Message {
     public text: string,
     public creationDate: string,
     public responses: Message[],
-    public file?: any,
+    public files?: File[],
     public responseToId?: number | null,
-    public isModified?: boolean
+    public isModified?: boolean,
   ) {}
 }

@@ -2,10 +2,18 @@ import { FC, memo } from 'react';
 
 import { Message } from 'core/entities/message.entity';
 import { transformDate } from 'shared/utils/transform-date';
-import { MessageDate, MessageInfo, MessageText, MessageUserAvatar, MessageWrapper } from './styled';
+import {
+  MessageDate,
+  MessageFileContainer,
+  MessageInfo,
+  MessageText,
+  MessageUserAvatar,
+  MessageWrapper,
+} from './styled';
 import Avatar from '../../avatar';
 import ManagerSvg from '../../svg/manager-svg';
 import Tooltip from '../../tooltip';
+import MessageFile from '../message-file';
 
 interface MessageListItemProps {
   message: Message;
@@ -37,6 +45,13 @@ const MessageListItem: FC<MessageListItemProps> = memo((props: MessageListItemPr
           <MessageDate>{relative || readableDate}</MessageDate>
         </MessageInfo>
         <MessageText>{message.text}</MessageText>
+        {message.files && (
+          <MessageFileContainer>
+            {message.files.map((f) => (
+              <MessageFile key={f.id} file={f} />
+            ))}
+          </MessageFileContainer>
+        )}
       </div>
     </MessageWrapper>
   );
