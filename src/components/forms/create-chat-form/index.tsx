@@ -24,6 +24,7 @@ import Chip from 'components/ui/chip';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
+import { ServerEvents } from 'core/constants/api';
 
 interface CreateChatFormProps {
   onCreateClick?: (chat?: Chat) => void;
@@ -34,9 +35,9 @@ async function fetchUsers() {
   return UserService.Instance.getAll();
 }
 
-async function createChat(instance: CreateChatDto) {
-  return ChatService.Instance.create(instance);
-}
+// async function createChat(instance: CreateChatDto) {
+//   return ChatService.Instance.create(instance);
+// }
 
 //TODO: Add error handling
 
@@ -45,7 +46,7 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
 
   const dispatch = useAppDispatch();
   const { user: loggedUser } = useAppSelector((state) => state.userReducer);
-  const { fetchUserChats } = userActions;
+  const { socket } = useAppSelector((state) => state.socketReducer);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -81,23 +82,38 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
   };
 
   const createClickHandler = () => {
-    createChat({
+    if (!socket) return;
+
+    const chat = {
       name: name,
-      isGroup: true,
       creatorId: loggedUser.id,
-      users: members,
-      isHistorySaved: true,
-    })
-      .then((chat) => {
-        cancelClickHandler();
-        dispatch(fetchUserChats());
-        if (onCreateClick) {
-          onCreateClick(chat);
-        }
-      })
-      .catch((err) => {
-        alert(err);
-      });
+      users: members.map((m) => m.id),
+      isGroup: true,
+    };
+
+    socket.emit(ServerEvents.CREATE_CHAT, chat);
+
+    // if (onCreateClick) {
+    //   onCreateClick(chat);
+    // }
+
+    // createChat({
+    //   name: name,
+    //   isGroup: true,
+    //   creatorId: loggedUser.id,
+    //   users: members,
+    //   isHistorySaved: true,
+    // })
+    //   .then((chat) => {
+    //     cancelClickHandler();
+    //     dispatch(fetchUserChats());
+    //     if (onCreateClick) {
+    //       onCreateClick(chat);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     alert(err);
+    //   });
   };
 
   const cancelClickHandler = () => {

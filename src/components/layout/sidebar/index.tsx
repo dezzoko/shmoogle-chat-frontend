@@ -27,11 +27,11 @@ const Sidebar: FC = memo(() => {
   const groupChats = chats.filter((chat) => chat.isGroup);
   const privateChats = chats.filter((chat) => !chat.isGroup);
 
-  const chatClickHandler = useCallback((chatId: number) => {
+  const chatClickHandler = useCallback((chatId: string) => {
     navigate(`${routes.chat}${chatId}`);
   }, []);
 
-  const dmClickHandler = useCallback((dmId: number) => {
+  const dmClickHandler = useCallback((dmId: string) => {
     navigate(`${routes.dm}${dmId}`);
   }, []);
 

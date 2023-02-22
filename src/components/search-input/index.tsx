@@ -31,11 +31,11 @@ const SearchInput: FC = memo(() => {
     setInputValue('');
   };
 
-  const chatClickHandler = (chatId: number) => {
+  const chatClickHandler = (chatId: string) => {
     navigate(routes.chat + chatId);
   };
 
-  const userClickHandler = (userId: number, dmId?: number) => {
+  const userClickHandler = (userId: string, dmId?: string) => {
     if (dmId) {
       navigate(routes.dm + dmId);
     }

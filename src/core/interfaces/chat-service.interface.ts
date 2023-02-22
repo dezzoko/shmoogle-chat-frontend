@@ -3,14 +3,14 @@ import { User } from '../entities/user.entity';
 import { IGenericService } from './generic-service.interface';
 
 export interface IChatService extends IGenericService<Chat> {
-  getByUserId(id: number): Promise<Chat[]>;
+  getByUserId(id: string): Promise<Chat[]>;
   create(instance: CreateChatDto): Promise<Chat>;
-  update(id: number, data: UpdateChatDto): Promise<Chat | null>;
+  update(id: string, data: UpdateChatDto): Promise<Chat | null>;
 }
 
 export interface CreateChatDto {
   name: string;
-  creatorId: number;
+  creatorId: string;
   isGroup?: boolean;
   isHistorySaved?: boolean;
   image?: string;
@@ -19,7 +19,7 @@ export interface CreateChatDto {
 
 export interface UpdateChatDto {
   name?: string;
-  creatorId?: number;
+  creatorId?: string;
   image?: string;
   isHistorySaved?: boolean;
   isGroup?: boolean;

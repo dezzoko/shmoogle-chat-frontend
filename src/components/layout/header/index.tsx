@@ -48,7 +48,7 @@ const Header: FC = memo(() => {
                 <MenuSvg />
               </RoundButton>
             </Tooltip>
-            <Link to={routes.welcome}>
+            <Link to={routes.home}>
               <LogoContainer padding="0 20px 0 0">
                 <img src={logo} />
               </LogoContainer>

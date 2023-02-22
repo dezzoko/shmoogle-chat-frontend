@@ -21,10 +21,10 @@ enum ChatPageOption {
   tasks,
 }
 
-function renderSwitch(option: ChatPageOption, chat: Chat) {
+function renderSwitch(option: ChatPageOption, chatId: string) {
   switch (option) {
     case ChatPageOption.chat:
-      return <ChatRoom chat={chat}></ChatRoom>;
+      return <ChatRoom chatId={chatId}></ChatRoom>;
     case ChatPageOption.files:
       return <></>;
     case ChatPageOption.tasks:
@@ -50,7 +50,7 @@ export const ChatPage: FC = () => {
   if (!id) {
     return <Navigate to={routes.welcome} />;
   }
-  const chat = chats.find((item) => item.id === +id);
+  const chat = chats.find((item) => item.id === id);
 
   if (!chat) {
     return <Navigate to={routes.welcome} />;
@@ -94,7 +94,7 @@ export const ChatPage: FC = () => {
           </ChatPageFlexContainer>
         </ChatPageBodyOptions>
 
-        <ChatPageBodyContent>{renderSwitch(currentOption, chat)}</ChatPageBodyContent>
+        <ChatPageBodyContent>{renderSwitch(currentOption, chat.id)}</ChatPageBodyContent>
       </ChatPageBody>
     </StyledChatPage>
   );

@@ -16,35 +16,35 @@ import ChatGroupGreeter from './chat-group-greeter';
 import ChatPrivateGreeter from './dm-greeter';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { CreateMessageDto } from 'core/interfaces/message-service.interface';
+import { useChat } from 'shared/hooks/use-chat.hook';
 
 interface ChatRoomProps {
-  chat: Chat;
-}
-
-async function fetchMessages(chatId: number) {
-  return MessageService.Instance.getAll(chatId);
-}
-
-async function addMessage(instance: CreateMessageDto) {
-  return MessageService.Instance.create(instance);
+  chatId: string;
 }
 
 // TODO: fix scrolldown button
 
 const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
-  const { chat } = props;
+  const { chatId } = props;
   const { user } = useAppSelector((state) => state.userReducer);
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  //const [messages, setMessages] = useState<Message[]>([]);
+
+  const { chat, messages, sendMessage } = useChat(chatId);
+
+  if (!chat) {
+    return null;
+  }
+
   const [formText, setFormText] = useState('');
   const [scrolledProgress, setScrolledProgress] = useState(100);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    fetchMessages(chat.id).then((result) => {
-      setMessages(result);
-    });
-  }, [chat]);
+  // useEffect(() => {
+  //   fetchMessages(chat.id).then((result) => {
+  //     setMessages(result);
+  //   });
+  // }, [chat]);
 
   useLayoutEffect(() => {
     if (scrolledProgress > 95) {
@@ -72,10 +72,12 @@ const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
   };
 
   const sendClickHandler = () => {
-    const instance = { chatId: chat.id, text: formText, user: user! };
-    addMessage(instance).then((msg) => {
-      setMessages([...messages, msg]);
-    });
+    sendMessage({ text: formText });
+
+    // const instance = { chatId: chat.id, text: formText, user: user! };
+    // addMessage(instance).then((msg) => {
+    //   setMessages([...messages, msg]);
+    // });
   };
 
   return (

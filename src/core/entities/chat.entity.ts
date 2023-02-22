@@ -2,9 +2,9 @@ import { User } from './user.entity';
 
 export class Chat {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
-    public creatorId: number,
+    public creatorId: string,
     public users: User[],
     public creationDate: string,
     public isHistorySaved?: boolean,
