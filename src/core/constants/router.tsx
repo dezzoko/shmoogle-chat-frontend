@@ -7,6 +7,7 @@ import { WelcomePage } from 'pages/welcome-page';
 import { DmPage } from 'pages/dm-page';
 import AuthPage from 'pages/auth';
 import AuthRequire from 'components/auth-require';
+import VideocallPage from 'pages/videocall/page';
 
 export const router = createBrowserRouter([
   {
@@ -33,10 +34,13 @@ export const router = createBrowserRouter([
   },
 
   {
-    path: 'auth/',
+    path: routes.auth,
     element: <AuthPage />,
   },
-
+  {
+    path: routes.videocall,
+    element: <VideocallPage />,
+  },
   {
     path: routes.welcome,
     element: <Navigate to={routes.home} />,

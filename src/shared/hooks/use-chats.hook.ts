@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
+
 import { ClientEvents, ServerEvents } from 'core/constants/api';
 import { Chat } from 'core/entities/chat.entity';
 import { BackendChat } from 'core/types/backend/backend-chat';
-import { useEffect } from 'react';
+import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { backendChatToEntityFactory } from 'shared/utils/factories';
 import { useAppDispatch } from './app-dispatch.hook';
@@ -11,7 +13,6 @@ import { useAppSelector } from './app-selector.hook';
 
 export function useChats() {
   const dispatch = useAppDispatch();
-  const { socket } = useAppSelector((state) => state.socketReducer);
   const { user, chats } = useAppSelector((state) => state.userReducer);
   const { setUserChats } = userActions;
 
@@ -26,18 +27,18 @@ export function useChats() {
   };
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on(ClientEvents.NEW_CHATS, newChatsHandler);
+    if (!chatSocketEmitter.isConnected()) return;
+    chatSocketEmitter.subscribe(ClientEvents.NEW_CHATS, newChatsHandler);
 
     return () => {
-      socket.removeListener(ClientEvents.NEW_CHATS, newChatsHandler);
+      chatSocketEmitter.unsubscribe(ClientEvents.NEW_CHATS, newChatsHandler);
     };
-  }, [socket]);
+  }, [chatSocketEmitter]);
 
   useEffect(() => {
-    if (socket && user) {
+    if (chatSocketEmitter.isConnected() && user) {
       console.log('EMITTING GET AND SUBSCRIBE CHATS');
-      socket.emit(ServerEvents.GET_AND_SUBSCRIBE_CHATS, user.id);
+      chatSocketEmitter.emit(ServerEvents.GET_AND_SUBSCRIBE_CHATS, user.id);
     }
-  }, [socket, user]);
+  }, [chatSocketEmitter, user]);
 }

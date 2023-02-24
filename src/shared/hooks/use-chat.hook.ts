@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+
 import { ClientEvents, ServerEvents } from 'core/constants/api';
 import { Message } from 'core/entities/message.entity';
 import { BackendMessage } from 'core/types/backend/backend-message';
 import { MessageService } from 'shared/services/message.service';
 import { backendMessageToEntityFactory } from 'shared/utils/factories';
 import { useAppSelector } from './app-selector.hook';
+import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
 
 export function useChat(chatId: string) {
-  const { socket } = useAppSelector((state) => state.socketReducer);
   const { user, chats } = useAppSelector((state) => state.userReducer);
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -21,22 +22,22 @@ export function useChat(chatId: string) {
   };
 
   const sendMessage = (sendMessageDto: SendMessageDto) => {
-    if (!socket || !user) return;
+    if (!chatSocketEmitter.isConnected() || !user) return;
 
     const message = { ...sendMessageDto, chatId, creatorId: user.id };
 
-    socket.emit(ServerEvents.SEND_MESSAGE, message);
+    chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
   };
 
   useEffect(() => {
-    if (!socket) return;
+    if (!chatSocketEmitter.isConnected()) return;
 
-    socket.on(ClientEvents.NEW_MESSAGE, newMessageHandler);
+    chatSocketEmitter.subscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
 
     return () => {
-      socket.removeListener(ClientEvents.NEW_MESSAGE, newMessageHandler);
+      chatSocketEmitter.unsubscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
     };
-  }, [socket]);
+  }, [chatSocketEmitter]);
 
   useEffect(() => {
     setMessages([]);

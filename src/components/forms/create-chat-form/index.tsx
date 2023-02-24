@@ -25,6 +25,7 @@ import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { ServerEvents } from 'core/constants/api';
+import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
 
 interface CreateChatFormProps {
   onCreateClick?: (chat?: Chat) => void;
@@ -46,7 +47,6 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
 
   const dispatch = useAppDispatch();
   const { user: loggedUser } = useAppSelector((state) => state.userReducer);
-  const { socket } = useAppSelector((state) => state.socketReducer);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -82,8 +82,6 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
   };
 
   const createClickHandler = () => {
-    if (!socket) return;
-
     const chat = {
       name: name,
       creatorId: loggedUser.id,
@@ -91,8 +89,7 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
       isGroup: true,
     };
 
-    socket.emit(ServerEvents.CREATE_CHAT, chat);
-
+    chatSocketEmitter.emit(ServerEvents.CREATE_CHAT, chat);
     // if (onCreateClick) {
     //   onCreateClick(chat);
     // }
