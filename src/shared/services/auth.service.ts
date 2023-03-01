@@ -12,9 +12,7 @@ export class AuthService implements IAuthService {
 
   async login(login: string, password: string): Promise<LoginBackendData> {
     try {
-      const tokens = (await (
-        await axios.post(`${SERVER_URL}auth/login`, { login, password })
-      ).data) as LoginBackendData;
+      const tokens = await (await axios.post<LoginBackendData>(`${SERVER_URL}auth/login`, { login, password })).data;
       //const user = await (await axios.get(`${SERVER_URL}user/self`)).data as BackendUser;
 
       const expirationDate = new Date();
@@ -24,15 +22,6 @@ export class AuthService implements IAuthService {
       return tokens;
     } catch (error) {
       throw new Error('Cannot login', { cause: error });
-    }
-  }
-
-  async loginGoogle() {
-    try {
-      const result = await (await axios.get(`${SERVER_URL}auth/google`)).data;
-      return result;
-    } catch (error) {
-      throw new Error('Cannot login through google', { cause: error });
     }
   }
 

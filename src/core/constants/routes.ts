@@ -4,5 +4,5 @@ export const routes = {
   chat: '/chat/',
   dm: '/dm/',
   auth: '/auth',
-  videocall: '/meet',
+  meet: '/meet/',
 };

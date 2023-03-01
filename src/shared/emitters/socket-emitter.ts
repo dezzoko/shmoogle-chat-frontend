@@ -1,12 +1,13 @@
+import io, { ManagerOptions, SocketOptions } from 'socket.io-client';
 import { Socket } from 'socket.io-client';
-import io from 'socket.io-client';
-import { Emitter } from './emitter';
-import { SERVER_SOCKET_URL } from 'core/constants/api';
 
-export class ChatSocketEmitter extends Emitter {
+import { Emitter } from './emitter';
+import { SERVER_SIGNALING_URL, SERVER_SOCKET_URL } from 'core/constants/api';
+
+export class SocketEmitter extends Emitter {
   clientSocket: Socket | null = null;
 
-  constructor(connectionUrl: string) {
+  constructor(connectionUrl: string, options?: Partial<ManagerOptions & SocketOptions>) {
     super();
     this.clientSocket = io(connectionUrl);
   }
@@ -25,10 +26,11 @@ export class ChatSocketEmitter extends Emitter {
     return this;
   }
 
-  public unsubscribe(event: string, callback: (...args: any) => void): void {
+  public unsubscribe(event: string, callback: (...args: any) => void): this {
     if (this.clientSocket) {
       this.clientSocket.off(event, callback);
     }
+    return this;
   }
 
   public closeConnection(): boolean {
@@ -42,8 +44,9 @@ export class ChatSocketEmitter extends Emitter {
   public isConnected(): boolean {
     if (!this.clientSocket) return false;
 
-    return !this.clientSocket.disconnected;
+    return true;
   }
 }
 
-export const chatSocketEmitter = new ChatSocketEmitter(SERVER_SOCKET_URL);
+export const chatSocketEmitter = new SocketEmitter(SERVER_SOCKET_URL);
+export const signalSocketEmitter = new SocketEmitter(SERVER_SIGNALING_URL);

@@ -27,9 +27,11 @@ export enum RTCSignalingClientEvents {
   REQUEST = 'REQUEST',
   CALL = 'CALL',
   END = 'END',
+  NEW_MEMBER = 'NEW_MEMBER',
 }
 
 export enum RTCSignalingServerEvents {
+  JOIN_ROOM = 'JOIN_ROOM',
   INITIALIZATION = 'INITIALIZATION',
   CALL = 'CALL',
   REQUEST = 'REQUEST',

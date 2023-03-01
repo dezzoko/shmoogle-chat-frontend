@@ -14,6 +14,7 @@ import ChatList from '../../chat/chat-list';
 import ChatListItem from '../../chat/chat-list-item';
 import { AvatarVariants } from 'components/avatar';
 import ChatActionsMenu from 'components/chat/chat-actions-menu';
+import MeetList from 'components/meet/meet-list';
 
 const Sidebar: FC = memo(() => {
   const dispatch = useAppDispatch();
@@ -77,7 +78,7 @@ const Sidebar: FC = memo(() => {
     >
       {isOpened ? (
         <>
-          <ChatListContainer flex={isChatsOpen ? '1' : ''}>
+          <ChatListContainer flex={isChatsOpen ? '1 0' : ''}>
             <ChatList
               name="Чаты"
               chatItems={privateChats}
@@ -88,7 +89,7 @@ const Sidebar: FC = memo(() => {
               menuElement={<ChatActionsMenu />}
             ></ChatList>
           </ChatListContainer>
-          <ChatListContainer flex={isGroupsOpen ? '1' : ''}>
+          <ChatListContainer flex={isGroupsOpen ? '1 0' : ''}>
             <ChatList
               name="Группы"
               chatItems={groupChats}
@@ -100,14 +101,8 @@ const Sidebar: FC = memo(() => {
               menuElement={<ChatActionsMenu />}
             ></ChatList>
           </ChatListContainer>
-          <ChatListContainer flex={isMeetsOpen ? '1' : ''}>
-            <ChatList
-              name="Встречи"
-              chatItems={[]}
-              isOpen={isMeetsOpen}
-              isOpenHandler={openMeetsHandler}
-              chatItemClickHandler={chatClickHandler}
-            ></ChatList>
+          <ChatListContainer flex={isMeetsOpen ? '1 0' : ''}>
+            <MeetList name="Встречи" isOpen={isMeetsOpen} isOpenHandler={openMeetsHandler}></MeetList>
           </ChatListContainer>
         </>
       ) : (

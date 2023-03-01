@@ -25,7 +25,7 @@ import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { ServerEvents } from 'core/constants/api';
-import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
+import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
 
 interface CreateChatFormProps {
   onCreateClick?: (chat?: Chat) => void;

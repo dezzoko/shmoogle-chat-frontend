@@ -1,7 +1,8 @@
 import { Emitter } from './emitter';
 
 export class MediaDevicesEmitter extends Emitter {
-  stream: MediaStream | null = null;
+  stream: MediaStream | undefined = undefined;
+  what = false;
 
   constructor() {
     super();
@@ -14,12 +15,14 @@ export class MediaDevicesEmitter extends Emitter {
   public async start(config?: MediaStreamConstraints) {
     try {
       const mediaStreamConstraints = config || { video: true, audio: true };
-      const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
 
-      this.stream = mediaStream;
+      if (!this.stream) {
+        this.stream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
+      }
       this.emit(MediaDevicesEvents.STREAM, this.stream);
     } catch (error) {
-      throw new Error('Cannot access media devices');
+      console.log(error);
+      throw new Error('Cannot access media devices', { cause: error });
     }
 
     return this;

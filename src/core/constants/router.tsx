@@ -7,7 +7,8 @@ import { WelcomePage } from 'pages/welcome-page';
 import { DmPage } from 'pages/dm-page';
 import AuthPage from 'pages/auth';
 import AuthRequire from 'components/auth-require';
-import VideocallPage from 'pages/videocall/page';
+import MeetRoomRequire from 'components/meet/meet-room-require';
+import MeetPage from 'pages/meet-page';
 
 export const router = createBrowserRouter([
   {
@@ -38,8 +39,14 @@ export const router = createBrowserRouter([
     element: <AuthPage />,
   },
   {
-    path: routes.videocall,
-    element: <VideocallPage />,
+    path: routes.meet + ':id',
+    element: (
+      <AuthRequire>
+        <MeetRoomRequire>
+          <MeetPage />
+        </MeetRoomRequire>
+      </AuthRequire>
+    ),
   },
   {
     path: routes.welcome,

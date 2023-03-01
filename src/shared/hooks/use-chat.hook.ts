@@ -6,7 +6,7 @@ import { BackendMessage } from 'core/types/backend/backend-message';
 import { MessageService } from 'shared/services/message.service';
 import { backendMessageToEntityFactory } from 'shared/utils/factories';
 import { useAppSelector } from './app-selector.hook';
-import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
+import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
 
 export function useChat(chatId: string) {
   const { user, chats } = useAppSelector((state) => state.userReducer);
@@ -37,7 +37,7 @@ export function useChat(chatId: string) {
     return () => {
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
     };
-  }, [chatSocketEmitter]);
+  }, [chatSocketEmitter.clientSocket]);
 
   useEffect(() => {
     setMessages([]);

@@ -19,7 +19,7 @@ export class Emitter {
     return this;
   }
 
-  public unsubscribe(event: string, callback: (...args: any) => void): void {
+  public unsubscribe(event: string, callback: (...args: any) => void): this {
     const subIndex = this.subscriptions.findIndex((subscription) => {
       return subscription.callback === callback && subscription.event === event;
     });
@@ -27,6 +27,7 @@ export class Emitter {
     if (subIndex !== -1) {
       this.subscriptions.splice(subIndex, 1);
     }
+    return this;
   }
 }
 

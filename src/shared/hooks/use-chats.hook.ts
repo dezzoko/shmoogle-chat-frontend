@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { ClientEvents, ServerEvents } from 'core/constants/api';
 import { Chat } from 'core/entities/chat.entity';
 import { BackendChat } from 'core/types/backend/backend-chat';
-import { chatSocketEmitter } from 'shared/emitters/chat-socket-emitter';
+import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { backendChatToEntityFactory } from 'shared/utils/factories';
 import { useAppDispatch } from './app-dispatch.hook';
@@ -27,18 +27,21 @@ export function useChats() {
   };
 
   useEffect(() => {
-    if (!chatSocketEmitter.isConnected()) return;
+    if (!chatSocketEmitter.isConnected()) {
+      console.log('not connected!');
+      return;
+    }
     chatSocketEmitter.subscribe(ClientEvents.NEW_CHATS, newChatsHandler);
 
     return () => {
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_CHATS, newChatsHandler);
     };
-  }, [chatSocketEmitter]);
+  }, [chatSocketEmitter.clientSocket]);
 
   useEffect(() => {
     if (chatSocketEmitter.isConnected() && user) {
       console.log('EMITTING GET AND SUBSCRIBE CHATS');
       chatSocketEmitter.emit(ServerEvents.GET_AND_SUBSCRIBE_CHATS, user.id);
     }
-  }, [chatSocketEmitter, user]);
+  }, [chatSocketEmitter.clientSocket, user]);
 }

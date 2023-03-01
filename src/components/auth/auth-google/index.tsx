@@ -1,14 +1,12 @@
+import { FC } from 'react';
 import GoogleSvg from 'components/svg/google-svg';
 import Tooltip from 'components/tooltip';
 import RoundButton from 'components/ui/round-button';
-import { FC } from 'react';
-import { AuthService } from 'shared/services/auth.service';
+import { SERVER_URL } from 'core/constants/api';
 
 const AuthGoogleButton: FC = () => {
   const clickHandler = () => {
-    AuthService.Instance.loginGoogle().then((res) => {
-      console.log('result is ', res);
-    });
+    window.open(`${SERVER_URL}auth/google`, '_self');
   };
 
   return (
