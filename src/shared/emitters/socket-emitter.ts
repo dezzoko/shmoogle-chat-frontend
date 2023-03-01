@@ -1,5 +1,4 @@
-import io, { ManagerOptions, SocketOptions } from 'socket.io-client';
-import { Socket } from 'socket.io-client';
+import io, { ManagerOptions, SocketOptions, Socket } from 'socket.io-client';
 
 import { Emitter } from './emitter';
 import { SERVER_SIGNALING_URL, SERVER_SOCKET_URL } from 'core/constants/api';

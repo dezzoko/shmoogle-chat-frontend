@@ -2,6 +2,7 @@ import { Emitter } from './emitter';
 import { MediaDevicesEmitter, MediaDevicesEvents } from './media-devices-emitter';
 import { RTCSignalingServerEvents, RTC_CONFIG } from 'core/constants/api';
 import { Socket } from 'socket.io-client';
+import { User } from 'core/entities/user.entity';
 
 export class PeerConnectionEmitter extends Emitter {
   pc: RTCPeerConnection;
@@ -29,7 +30,7 @@ export class PeerConnectionEmitter extends Emitter {
     this.getDescription = this.getDescription.bind(this);
   }
 
-  start(isCaller: boolean, config?: MediaStreamConstraints) {
+  start(isCaller: boolean, config?: MediaStreamConstraints, user?: User) {
     this.mediaDevicesEmitter
       .subscribe(MediaDevicesEvents.STREAM, (stream: MediaStream) => {
         if (this.streamCaptured) return;
@@ -41,20 +42,24 @@ export class PeerConnectionEmitter extends Emitter {
 
         this.streamCaptured = true;
 
-        isCaller ? this.clientSocket.emit(RTCSignalingServerEvents.REQUEST, { to: this.remoteId }) : this.createOffer();
+        isCaller
+          ? this.clientSocket.emit(RTCSignalingServerEvents.REQUEST, { to: this.remoteId, user: user })
+          : this.createOffer();
       })
       .start(config);
 
     return this;
   }
 
-  startWithExisting(isCaller: boolean, localStream: MediaStream) {
+  startWithExisting(isCaller: boolean, localStream: MediaStream, user?: User) {
     localStream.getTracks().forEach((track) => {
       this.pc.addTrack(track, localStream);
     });
     this.emit(PeerConnectionEvents.LOCAL_STREAM, localStream);
 
-    isCaller ? this.clientSocket.emit(RTCSignalingServerEvents.REQUEST, { to: this.remoteId }) : this.createOffer();
+    isCaller
+      ? this.clientSocket.emit(RTCSignalingServerEvents.REQUEST, { to: this.remoteId, user: user })
+      : this.createOffer();
 
     return this;
   }

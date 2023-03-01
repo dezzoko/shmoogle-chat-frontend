@@ -24,12 +24,6 @@ export const MeetPageVideo = styled.div<MeetPageVideoProps>`
   position: relative;
   width: ${(props) => `calc(calc( 100% / ${props.scale || 1}) - ${5 * props.scale}px )`};
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  color: white;
 
   & video {
     width: 100%;
@@ -49,17 +43,6 @@ export const MeetPageControlPanel = styled.div`
   height: 60px;
   padding: 10px 5%;
   box-sizing: border-box;
-`;
-
-export const MeetPageEndCallImage = styled.div`
-  width: 100%;
-  height: 100%;
-
-  & img {
-    width: 100%;
-    height: 100%;
-    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(82deg) brightness(104%) contrast(104%);
-  }
 `;
 
 interface MeetPageVideoProps {

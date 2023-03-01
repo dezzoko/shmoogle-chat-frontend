@@ -2,7 +2,7 @@ import { Emitter } from './emitter';
 
 export class MediaDevicesEmitter extends Emitter {
   stream: MediaStream | undefined = undefined;
-  what = false;
+  isStarting = false;
 
   constructor() {
     super();
@@ -13,6 +13,8 @@ export class MediaDevicesEmitter extends Emitter {
    */
 
   public async start(config?: MediaStreamConstraints) {
+    if (this.isStarting) return;
+    this.isStarting = true;
     try {
       const mediaStreamConstraints = config || { video: true, audio: true };
 
@@ -21,10 +23,12 @@ export class MediaDevicesEmitter extends Emitter {
       }
       this.emit(MediaDevicesEvents.STREAM, this.stream);
     } catch (error) {
+      this.isStarting = false;
       console.log(error);
       throw new Error('Cannot access media devices', { cause: error });
     }
 
+    this.isStarting = false;
     return this;
   }
   /**

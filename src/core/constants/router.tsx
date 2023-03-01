@@ -9,13 +9,16 @@ import AuthPage from 'pages/auth';
 import AuthRequire from 'components/auth-require';
 import MeetRoomRequire from 'components/meet/meet-room-require';
 import MeetPage from 'pages/meet-page';
+import UserLoader from 'components/user-loader';
 
 export const router = createBrowserRouter([
   {
     path: routes.home,
     element: (
       <AuthRequire>
-        <App />
+        <UserLoader>
+          <App />
+        </UserLoader>
       </AuthRequire>
     ),
     children: [
@@ -42,9 +45,11 @@ export const router = createBrowserRouter([
     path: routes.meet + ':id',
     element: (
       <AuthRequire>
-        <MeetRoomRequire>
-          <MeetPage />
-        </MeetRoomRequire>
+        <UserLoader>
+          <MeetRoomRequire>
+            <MeetPage />
+          </MeetRoomRequire>
+        </UserLoader>
       </AuthRequire>
     ),
   },

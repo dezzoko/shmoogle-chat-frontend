@@ -1,36 +1,41 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { User } from 'core/entities/user.entity';
+import { routes } from 'core/constants/routes';
+import { RTCSignalingClientEvents, RTCSignalingServerEvents } from 'core/constants/api';
 import { PeerConnectionEmitter, PeerConnectionEvents } from 'shared/emitters/peer-connection-emitter';
 import { mediaDevicesEmitter, MediaDevicesEvents } from 'shared/emitters/media-devices-emitter';
 import { signalSocketEmitter } from 'shared/emitters/socket-emitter';
-import { RTCSignalingClientEvents, RTCSignalingServerEvents } from 'core/constants/api';
-import { routes } from 'core/constants/routes';
 import { MeetPageControlPanel, MeetPageMembersContainer, MeetPageVideo, StyledMeetPage } from './styled';
 import MeetVideoWindow from 'components/meet/meet-video-window';
 import MeetControlPanel from 'components/meet/meet-control-panel';
+import { useAppSelector } from 'shared/hooks/app-selector.hook';
 
 interface Members {
   [id: string]: {
     pc?: PeerConnectionEmitter;
     src?: MediaStream;
+    user?: User;
   };
 }
 
 const defaultMediaStreamConstraints = { video: true, audio: true };
 
+// TODO: add signals for user muting audio/video tracks, add typization for socket emitter
+
 const MeetPage: FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const { user } = useAppSelector((state) => state.userReducer);
+
   const [localId, setLocalId] = useState('');
   const [localSrc, setLocalSrc] = useState<MediaStream>();
-
   const [members, setMembers] = useState<Members>({});
-
   const [config, setConfig] = useState<MediaStreamConstraints>(defaultMediaStreamConstraints);
 
-  const startCall = (isCaller: boolean, remoteId: string) => {
+  const startCall = (isCaller: boolean, remoteId: string, remoteUser?: User) => {
     const peerConnectionEmitter = new PeerConnectionEmitter(
       remoteId,
       mediaDevicesEmitter,
@@ -40,7 +45,7 @@ const MeetPage: FC = () => {
     setMembers((prevMembers: Members) => {
       return {
         ...prevMembers,
-        [remoteId]: { pc: peerConnectionEmitter },
+        [remoteId]: { pc: peerConnectionEmitter, user: remoteUser },
       };
     });
 
@@ -53,7 +58,7 @@ const MeetPage: FC = () => {
           return { ...prevMembers, [remoteId]: { ...prevMembers[remoteId], src: stream } };
         });
       })
-      .start(isCaller, config);
+      .start(isCaller, config, user || undefined);
 
     // TODO: move to useEffect with delegation
     signalSocketEmitter
@@ -107,12 +112,12 @@ const MeetPage: FC = () => {
     }
   };
 
-  const requestHandler = ({ from }: any) => {
-    startCall(false, from);
+  const requestHandler = ({ from, user }: any) => {
+    startCall(false, from, user);
   };
 
-  const newMemberHandler = ({ from }: any) => {
-    startCall(true, from);
+  const newMemberHandler = ({ from, user }: any) => {
+    startCall(true, from, user);
   };
 
   const configHandler = (newConfig: MediaStreamConstraints) => {
@@ -142,7 +147,7 @@ const MeetPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    signalSocketEmitter.emit(RTCSignalingServerEvents.JOIN_ROOM, { joinToken: id });
+    signalSocketEmitter.emit(RTCSignalingServerEvents.JOIN_ROOM, { joinToken: id, user: user });
   }, [id]);
 
   useEffect(() => {
@@ -161,7 +166,7 @@ const MeetPage: FC = () => {
       <MeetPageMembersContainer>
         {localSrc ? (
           <MeetPageVideo scale={Object.keys(members).length + 1}>
-            <MeetVideoWindow src={localSrc} muted label={'you'} />
+            <MeetVideoWindow src={localSrc} muted user={user} />
           </MeetPageVideo>
         ) : (
           <></>
@@ -170,7 +175,7 @@ const MeetPage: FC = () => {
           .filter((m) => members[m].src)
           .map((memberId) => (
             <MeetPageVideo scale={Object.keys(members).length + 1} key={memberId}>
-              <MeetVideoWindow src={members[memberId].src!} label={memberId} />
+              <MeetVideoWindow src={members[memberId].src!} user={members[memberId].user || null} />
             </MeetPageVideo>
           ))}
       </MeetPageMembersContainer>
