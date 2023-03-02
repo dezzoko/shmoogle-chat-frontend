@@ -3,18 +3,20 @@ import { User } from '../entities/user.entity';
 import { IGenericService } from './generic-service.interface';
 
 export interface IMessageService extends IGenericService<Message> {
-  getAll(chatId?: number): Promise<Message[]>;
-  getLastMessage(chatId?: number): Promise<Message>;
+  getAll(chatId?: string): Promise<Message[]>;
+  getLastMessage(chatId?: string): Promise<Message>;
   create(instance: CreateMessageDto): Promise<Message>;
-  update(id: number, data: UpdateMessageDto): Promise<Message | null>;
+  update(id: string, data: UpdateMessageDto): Promise<Message | null>;
+
+  getByChatId(chatId: string): Promise<Message[]>;
 }
 
 export interface CreateMessageDto {
-  chatId: number;
+  chatId: string;
   user: User;
   text: string;
   file?: any;
-  responseToId?: number;
+  responseToId?: string;
 }
 
 export interface UpdateMessageDto {

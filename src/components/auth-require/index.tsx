@@ -1,10 +1,10 @@
 import { routes } from 'core/constants/routes';
-import { USER_TOKEN } from 'core/constants/tokens';
 import React, { FC, PropsWithChildren } from 'react';
 import { Navigate } from 'react-router-dom';
+import { AuthService } from 'shared/services/auth.service';
 
 const AuthRequire: FC<PropsWithChildren> = ({ children }) => {
-  if (!localStorage.getItem(USER_TOKEN)) {
+  if (!AuthService.Instance.isLoggedIn()) {
     return <Navigate to={routes.auth} />;
   }
 

@@ -8,6 +8,7 @@ interface ButtonWithIconProps {
   color?: string;
   outlined?: boolean;
   textJustifyContentProperty?: string;
+  disabled?: boolean;
   gap?: string;
   onClick?: () => void;
 }

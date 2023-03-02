@@ -1,4 +1,9 @@
 import { File } from 'core/entities/file.entity';
+import axios from 'axios';
+import { SERVER_URL } from 'core/constants/api';
+import { JWT_ACCESS_TOKEN } from 'core/constants/tokens';
+import { BackendMessage } from 'core/types/backend/backend-message';
+
 import { Message } from '../../core/entities/message.entity';
 import { CreateMessageDto, IMessageService, UpdateMessageDto } from '../../core/interfaces/message-service.interface';
 import { getAvailableId } from '../utils/get-available-id';
@@ -9,8 +14,8 @@ export class MessageService implements IMessageService {
 
   messages: Message[] = [
     {
-      id: 1,
-      chatId: 1,
+      id: '1',
+      chatId: '1',
       user: this.userService.users[1],
       text: 'text',
       creationDate: new Date().toString(),
@@ -19,8 +24,8 @@ export class MessageService implements IMessageService {
       isModified: false,
     },
     {
-      id: 2,
-      chatId: 1,
+      id: '2',
+      chatId: '1',
       user: this.userService.users[1],
       text: "Sooo, let's check how that works? :->",
       creationDate: new Date().toString(),
@@ -29,8 +34,8 @@ export class MessageService implements IMessageService {
       isModified: false,
     },
     {
-      id: 3,
-      chatId: 1,
+      id: '3',
+      chatId: '1',
       user: this.userService.users[2],
       text: 'I think it will brake',
       creationDate: new Date().toString(),
@@ -38,13 +43,13 @@ export class MessageService implements IMessageService {
       isModified: false,
     },
     {
-      id: 4,
-      chatId: 1,
+      id: '4',
+      chatId: '1',
       user: this.userService.users[3],
       text: 'I am response!',
       creationDate: new Date().toString(),
       responses: [],
-      responseToId: 2,
+      responseToId: '2',
       isModified: false,
     },
   ];
@@ -65,7 +70,7 @@ export class MessageService implements IMessageService {
     this.messages
       .filter((message) => message.responseToId)
       .forEach((message) => {
-        const msg = this.messages[message.responseToId! - 1];
+        const msg = this.messages[+message.responseToId! - 1];
         msg.responses.push(message);
       });
   }
@@ -79,7 +84,7 @@ export class MessageService implements IMessageService {
     });
   }
 
-  async getAll(chatId?: number) {
+  async getAll(chatId?: string) {
     if (!chatId) {
       return this.messages;
     }
@@ -87,11 +92,11 @@ export class MessageService implements IMessageService {
     return this.messages.filter((message) => message.chatId === chatId);
   }
 
-  async get(id: number) {
+  async get(id: string) {
     return this.messages.find((message) => message.id === id) || null;
   }
 
-  async getLastMessage(id: number) {
+  async getLastMessage(id: string) {
     const messages = await this.getAll(id);
 
     return messages[messages.length - 1];
@@ -110,7 +115,7 @@ export class MessageService implements IMessageService {
     return message;
   }
 
-  async update(id: number, data: UpdateMessageDto) {
+  async update(id: string, data: UpdateMessageDto) {
     const message = await this.get(id);
 
     if (!message) {
@@ -125,7 +130,7 @@ export class MessageService implements IMessageService {
     return message;
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const index = this.messages.findIndex((message) => message.id === id);
 
     if (index === -1) {
@@ -134,5 +139,20 @@ export class MessageService implements IMessageService {
 
     this.messages.splice(index, 1);
     return true;
+  }
+
+  async getByChatId(chatId: string) {
+    try {
+      const token = localStorage.getItem(JWT_ACCESS_TOKEN);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      const messages = (await (
+        await axios.get(`${SERVER_URL}chat/${chatId}/messages`, config)
+      ).data) as BackendMessage[];
+      //TODO: responses
+      return messages.map((m) => ({ ...m, creationDate: m.createdAt.toString(), responses: [], user: m.creatorId }));
+    } catch (error) {
+      throw new Error('Cannot get chat messages', { cause: error });
+    }
   }
 }

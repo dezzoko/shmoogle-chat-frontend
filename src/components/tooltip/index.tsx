@@ -43,7 +43,7 @@ const Tooltip: FC<TooltipProps> = (props: TooltipProps) => {
   return (
     <StyledTooltip>
       <TooltipBox isVisible={isVisible} ref={tooltipRef}>
-        {text}
+        <pre>{text} </pre>
       </TooltipBox>
       <div onMouseEnter={setIsVisibleTrue} onMouseLeave={setIsVisibleFalse} onClick={setIsVisibleFalse}>
         {children}

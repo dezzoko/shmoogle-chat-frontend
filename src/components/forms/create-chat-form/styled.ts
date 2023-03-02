@@ -63,7 +63,7 @@ export const CreateChatFormUsers = styled.div`
   height: 40px;
   position: relative;
 
-  &: focus-within ${UserResults} {
+  &:focus-within ${UserResults} {
     display: block;
   }
 `;

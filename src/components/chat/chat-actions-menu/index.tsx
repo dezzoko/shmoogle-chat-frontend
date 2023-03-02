@@ -16,11 +16,11 @@ const ChatActionsMenu: FC = () => {
   const [isCreateChatModalHidden, setCreateChatModalHidden] = useState(true);
   const navigate = useNavigate();
 
-  const chatClickHandler = (chatId: number) => {
+  const chatClickHandler = (chatId: string) => {
     navigate(routes.chat + chatId);
   };
 
-  const userClickHandler = (userId: number, dmId?: number) => {
+  const userClickHandler = (userId: string, dmId?: string) => {
     if (dmId) {
       navigate(routes.dm + dmId);
     }

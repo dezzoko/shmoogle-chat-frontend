@@ -19,7 +19,7 @@ interface ChatListProps {
   tooltipAddText?: string;
   avatarVariant?: AvatarVariants;
   isOpenHandler?: (value: boolean) => void;
-  chatItemClickHandler?: (id: number) => void;
+  chatItemClickHandler?: (id: string) => void;
 }
 
 const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
@@ -44,7 +44,7 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
     }
   };
 
-  const chatItemClickHandlerHandler = (id: number) => {
+  const chatItemClickHandlerHandler = (id: string) => {
     if (chatItemClickHandler) {
       chatItemClickHandler(id);
     }

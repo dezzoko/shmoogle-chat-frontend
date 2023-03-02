@@ -1,25 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Chat } from 'core/entities/chat.entity';
-import { Dm } from 'core/entities/dm.entity';
 import { User } from 'core/entities/user.entity';
 
 interface UserState {
   user: User | null;
   isUserLoading: boolean;
+  isUserError: boolean;
   chats: Chat[];
-  isChatLoading: boolean;
-  dms: Dm[];
-  isDmLoading: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   isUserLoading: false,
+  isUserError: false,
   chats: [],
-  isChatLoading: false,
-  dms: [],
-  isDmLoading: false,
 };
 
 export const userSlice = createSlice({
@@ -28,29 +23,24 @@ export const userSlice = createSlice({
   reducers: {
     fetchLoggedUser(state) {
       state.isUserLoading = true;
+      state.isUserError = false;
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    fetchUserChats(state) {},
 
     setLoggedUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
       state.isUserLoading = false;
+      state.isUserError = false;
     },
 
-    fetchUserChats(state) {
-      state.isChatLoading = true;
+    setLoggedUserError(state) {
+      state.isUserError = true;
+      state.isUserLoading = false;
     },
 
     setUserChats(state, action: PayloadAction<Chat[]>) {
       state.chats = action.payload;
-      state.isChatLoading = false;
-    },
-
-    fetchUserDms(state) {
-      state.isDmLoading = true;
-    },
-
-    setUserDms(state, action: PayloadAction<Dm[]>) {
-      state.dms = action.payload;
-      state.isDmLoading = false;
     },
   },
 });

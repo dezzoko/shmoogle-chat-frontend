@@ -8,8 +8,8 @@ export const StyledButtonWithIcon = styled.div<StyledButtonWithIconProps>`
   border: 1px solid ${(props) => (props.outlined ? props.theme.button.outlineColor : 'transparent')};
   transition: background 0.1s ease;
   &:hover {
-    cursor: pointer;
-    background: ${({ theme }) => theme.button.hoverColor};
+    cursor: ${(props) => (props.disabled ? '' : 'pointer')};
+    background: ${(props) => (props.disabled ? '' : props.theme.button.hoverColor)};
   }
 `;
 
@@ -46,4 +46,5 @@ interface ButtonWithIconNameProps {
 interface StyledButtonWithIconProps {
   gap?: string;
   outlined?: boolean;
+  disabled?: boolean;
 }

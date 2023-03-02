@@ -14,7 +14,7 @@ export const DmPage: FC = () => {
   if (!id || !user) {
     return <Navigate to={routes.welcome} />;
   }
-  const chat = chats.find((item) => item.id === +id);
+  const chat = chats.find((item) => item.id === id);
 
   if (!chat) {
     return <Navigate to={routes.welcome} />;
@@ -32,7 +32,7 @@ export const DmPage: FC = () => {
       </DmPageHeader>
       <DmPageBody>
         <DmPageBodyContent>
-          <ChatRoom chat={chat} />
+          <ChatRoom chatId={chat.id} />
         </DmPageBodyContent>
       </DmPageBody>
     </StyledDmPage>

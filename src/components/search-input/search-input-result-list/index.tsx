@@ -6,15 +6,16 @@ import { UserService } from 'shared/services/user.service';
 import { ResultContainer, StyledSearchInputResultsList } from './styled';
 import UserSearchResult from '../user-search-result';
 import ChatSearchResult from '../chat-search-result';
+import { backendUserToEntityFactory } from 'shared/utils/factories';
 
 interface SearchInputResultsListProps {
   filterValue: string;
-  chatClickHandler: (chatId: number) => void;
-  userClickHandler: (userId: number, chatId?: number) => void;
+  chatClickHandler: (chatId: string) => void;
+  userClickHandler: (userId: string, chatId?: string) => void;
 }
 
-function fetchUsers() {
-  return UserService.Instance.getAll();
+async function fetchUsers() {
+  return UserService.Instance.getKnownUsers();
 }
 
 // TODO: improve filter;
@@ -26,16 +27,17 @@ const SearchInputResultsList: FC<SearchInputResultsListProps> = memo((props: Sea
 
   const filterUsers = useMemo(
     () => users.filter((u) => u.login.includes(filterValue) || (u.username.includes(filterValue) && u.id != user?.id)),
-    [filterValue],
+    [filterValue, user],
   );
   const filterChats = useMemo(() => chats.filter((ch) => ch.name.includes(filterValue) && ch.isGroup), [filterValue]);
 
-  const findDmByUserId = (userId: number) => {
+  const findDmByUserId = (userId: string) => {
     return chats.find((chat) => !chat.isGroup && chat.users.find((u) => u.id === userId))?.id;
   };
 
   useEffect(() => {
-    fetchUsers().then((users) => {
+    fetchUsers().then((backendUsers) => {
+      const users = backendUsers.map((u) => backendUserToEntityFactory(u));
       setUsers(users);
     });
   }, []);

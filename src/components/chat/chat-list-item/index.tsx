@@ -25,7 +25,7 @@ function transformLastMessage(date: string | undefined) {
   return getRelativeDate(date) || getNativeDate(date);
 }
 
-async function getLastMessage(chatId: number) {
+async function getLastMessage(chatId: string) {
   return MessageService.Instance.getLastMessage(chatId);
 }
 
@@ -52,7 +52,7 @@ const ChatListItem: FC<ChatListItemProps> = memo((props: ChatListItemProps) => {
     <StyledChatListItem onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler}>
       <ChatListItemInfo>
         <Avatar src={chat.image} label={chat.name[0]} size="28px" variant={avatarVariant} />
-        {isSmall ? <></> : <label>{chat.name}</label>}
+        {isSmall ? <></> : <span>{chat.name}</span>}
       </ChatListItemInfo>
 
       {isInfoShowed && !isSmall ? (

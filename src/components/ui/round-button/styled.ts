@@ -11,10 +11,11 @@ export const StyledRoundButton = styled.a<StyledRoundButtonProps>`
   justify-content: center;
   align-items: center;
   color: #5f6368;
+  background: ${(props) => props.background};
   opacity: ${(props) => (props.disabled ? '0.8' : '1')};
   &:hover {
     cursor: ${(props) => (props.disabled ? '' : 'pointer')};
-    background: ${(props) => (props.disabled ? '' : props.theme.hoverColor)};
+    background: ${(props) => (props.disabled ? props.background : props.hoverBackground || props.theme.hoverColor)};
   }
 `;
 
@@ -23,4 +24,6 @@ export interface StyledRoundButtonProps {
   padding?: string;
   margin?: string;
   disabled?: boolean;
+  background?: string;
+  hoverBackground?: string;
 }
