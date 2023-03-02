@@ -62,7 +62,7 @@ const ChatHeader: FC<ChatHeaderProps> = memo((props: ChatHeaderProps) => {
 
       <ChatHeaderFlexContainer>
         <FloatingMenu element={<ChatOptionsMenu />} isHidden={isMenuHidden} setHidden={setMenuHidden}>
-          <ChatInfoButton chat={chat} onClick={(e: any) => setMenuHidden(false)} />
+          <ChatInfoButton chat={chat} onClick={(e: any) => setMenuHidden(!isMenuHidden)} />
         </FloatingMenu>
         <ChatHeaderActions>
           <Tooltip text="Поиск в этом чате">

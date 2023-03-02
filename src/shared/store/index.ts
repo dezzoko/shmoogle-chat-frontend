@@ -5,6 +5,7 @@ import sidebarReducer from './reducers/sidebar.slice';
 import userReducer from './reducers/user.slice';
 import themeReducer from './reducers/theme.slice';
 import searchInputReducer from './reducers/search-input.slice';
+import chatRoomReducer from './reducers/chat-room.slice';
 import sagas from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -15,6 +16,7 @@ export const store = configureStore({
     userReducer,
     themeReducer,
     searchInputReducer,
+    chatRoomReducer,
   }),
   middleware: [...getDefaultMiddleware({ thunk: false }), sagaMiddleware],
 });

@@ -28,6 +28,7 @@ export const MessageText = styled.p`
   margin: 5px 0;
 `;
 
+export const MessageFileContainer = styled.div``;
 interface Hideable {
   hidden?: boolean;
 }
