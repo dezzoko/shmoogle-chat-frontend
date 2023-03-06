@@ -1,8 +1,7 @@
-import { ChangeEvent, FC, useEffect, useId, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useId } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
 import { routes } from 'core/constants/routes';
-import { Chat } from 'core/entities/chat.entity';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import ChatRoom from 'components/chat-room';
 import OptionRadio from 'components/ui/option-radiobutton';
@@ -23,7 +22,7 @@ function renderSwitch(option: ChatPageOption, chatId: string) {
     case ChatPageOption.chat:
       return <ChatRoom chatId={chatId}></ChatRoom>;
     case ChatPageOption.files:
-      return <ChatFiles chat={chat}></ChatFiles>;
+      return <ChatFiles chatId={chatId}></ChatFiles>;
     case ChatPageOption.tasks:
       return <></>;
     default:
@@ -34,25 +33,17 @@ function renderSwitch(option: ChatPageOption, chatId: string) {
 export const ChatPage: FC = () => {
   const radioName = useId();
   const { id } = useParams();
+  const dispatch = useAppDispatch();
+
   const { chats } = useAppSelector((state) => state.userReducer);
   const { messageId, currentOption } = useAppSelector((state) => state.chatRoomReducer);
-  const dispatch = useAppDispatch();
-  const { setCurrentOption, setHighlightedMessage } = chatRoomActions;
+  const { setCurrentOption } = chatRoomActions;
 
-  useEffect(() => {
-    if (messageId) {
-      dispatch(setCurrentOption(ChatPageOption.chat));
-    }
-  }, [messageId]);
   const onOptionChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (+value in ChatPageOption) {
       dispatch(setCurrentOption(+value));
     }
-  };
-
-  const findFileMessage = (m: number) => {
-    console.log();
   };
 
   if (!id) {
@@ -67,6 +58,12 @@ export const ChatPage: FC = () => {
   if (!chat.isGroup) {
     return <Navigate to={`${routes.dm}${id}`} />;
   }
+
+  useEffect(() => {
+    if (messageId) {
+      dispatch(setCurrentOption(ChatPageOption.chat));
+    }
+  }, [messageId]);
 
   return (
     <StyledChatPage>

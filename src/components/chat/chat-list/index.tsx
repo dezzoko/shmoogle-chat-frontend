@@ -76,7 +76,7 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
             {chatItems.length ? (
               chatItems.map((chat: Chat) => (
                 <ChatListItemContainer key={chat.id} onClick={() => chatItemClickHandlerHandler(chat.id)}>
-                  <ChatListItem chat={chat} avatarVariant={avatarVariant} />
+                  <ChatListItem chatId={chat.id} avatarVariant={avatarVariant} />
                 </ChatListItemContainer>
               ))
             ) : (

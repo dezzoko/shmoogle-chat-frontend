@@ -2,8 +2,6 @@ import { FC, useEffect, useMemo, useState } from 'react';
 
 import { User } from 'core/entities/user.entity';
 import { Chat } from 'core/entities/chat.entity';
-import { CreateChatDto } from 'core/interfaces/chat-service.interface';
-import { ChatService } from 'shared/services/chat.service';
 import { UserService } from 'shared/services/user.service';
 import {
   CreateChatFormButtons,
@@ -22,10 +20,10 @@ import SmileSvg from 'components/svg/smile-svg';
 import UserSearchResult from 'components/search-input/user-search-result';
 import Chip from 'components/ui/chip';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
-import { userActions } from 'shared/store/reducers/user.slice';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { ServerEvents } from 'core/constants/api';
 import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
+import { backendUserToEntityFactory } from 'shared/utils/factories';
 
 interface CreateChatFormProps {
   onCreateClick?: (chat?: Chat) => void;
@@ -33,12 +31,8 @@ interface CreateChatFormProps {
 }
 
 async function fetchUsers() {
-  return UserService.Instance.getAll();
+  return UserService.Instance.getKnownUsers();
 }
-
-// async function createChat(instance: CreateChatDto) {
-//   return ChatService.Instance.create(instance);
-// }
 
 //TODO: Add error handling
 
@@ -124,8 +118,11 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
   };
 
   useEffect(() => {
-    fetchUsers().then((users) => setUsers(users));
-  }, [setUsers]);
+    fetchUsers().then((backendUsers) => {
+      const users = backendUsers.map((backendUser) => backendUserToEntityFactory(backendUser));
+      setUsers(users);
+    });
+  }, []);
 
   return (
     <StyledCreateChatForm>

@@ -10,6 +10,7 @@ export const FileMessageContainer = styled.div`
   box-shadow: 1px 1px 6px 0px rgba(34, 60, 80, 0.2);
   &:hover {
     background-color: ${({ theme }) => theme.hoverColor};
+    cursor: pointer;
   }
 `;
 

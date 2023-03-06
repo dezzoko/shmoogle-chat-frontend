@@ -9,6 +9,7 @@ interface ButtonWithIconProps {
   outlined?: boolean;
   textJustifyContentProperty?: string;
   disabled?: boolean;
+  isHoverHighlighted?: boolean;
   gap?: string;
   onClick?: () => void;
 }

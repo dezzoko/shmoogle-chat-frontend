@@ -9,7 +9,7 @@ export const StyledButtonWithIcon = styled.div<StyledButtonWithIconProps>`
   transition: background 0.1s ease;
   &:hover {
     cursor: ${(props) => (props.disabled ? '' : 'pointer')};
-    background: ${(props) => (props.disabled ? '' : props.theme.button.hoverColor)};
+    background: ${(props) => (props.disabled ? '' : props.isHoverHighlighted ? props.theme.button.hoverColor : '')};
   }
 `;
 
@@ -47,4 +47,5 @@ interface StyledButtonWithIconProps {
   gap?: string;
   outlined?: boolean;
   disabled?: boolean;
+  isHoverHighlighted?: boolean;
 }

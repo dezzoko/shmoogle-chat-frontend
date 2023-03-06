@@ -2,18 +2,34 @@ import { FC } from 'react';
 import { File } from 'core/entities/file.entity';
 import { FileMessageContainer, ImageContainer } from './styled';
 import fileImage from 'assets/file-icon.png';
+import { MessageService } from 'shared/services/message.service';
+
 interface MessageFileProps {
   file: File;
 }
 
 const MessageFile: FC<MessageFileProps> = (props: MessageFileProps) => {
-  const { name } = props.file;
+  const { id, name } = props.file;
   //TODO: add image display for files
   const typeFile = name.substring(name.lastIndexOf('.'));
+
+  const fileClickHandler = () => {
+    MessageService.Instance.getFile(id).then((response) => {
+      const href = URL.createObjectURL(response);
+      const link = document.createElement('a');
+      link.href = href;
+      link.setAttribute('download', name);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    });
+  };
+
   return (
-    <FileMessageContainer>
+    <FileMessageContainer onClick={fileClickHandler}>
       <ImageContainer src={fileImage} />
-      <div>{name}</div>
+      <span>{name}</span>
     </FileMessageContainer>
   );
 };

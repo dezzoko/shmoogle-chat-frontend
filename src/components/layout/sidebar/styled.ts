@@ -8,6 +8,7 @@ export const StyledSidebar = styled.div<StyledSidebarProps>`
   box-shadow: inset -1px 0 0 ${({ theme }) => theme.block.shadowColor};
   width: ${(props) => props.width || '72px'};
   height: -webkit-fill-available;
+  height: 100%;
   background: ${({ theme }) => theme.block.background};
   transition: width 0.1s ease;
   z-index: 1;

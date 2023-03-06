@@ -114,7 +114,7 @@ const Sidebar: FC = memo(() => {
             {isChatsOpen ? (
               privateChats.map((chat) => (
                 <ChatListItemContainer key={chat.id}>
-                  <ChatListItem chat={chat} isSmall={true} />
+                  <ChatListItem chatId={chat.id} isSmall={true} />
                 </ChatListItemContainer>
               ))
             ) : (
@@ -128,7 +128,7 @@ const Sidebar: FC = memo(() => {
             {isGroupsOpen ? (
               groupChats.map((chat) => (
                 <ChatListItemContainer key={chat.id}>
-                  <ChatListItem chat={chat} isSmall={true} avatarVariant={AvatarVariants.square} />
+                  <ChatListItem chatId={chat.id} isSmall={true} avatarVariant={AvatarVariants.square} />
                 </ChatListItemContainer>
               ))
             ) : (

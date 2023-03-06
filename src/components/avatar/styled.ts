@@ -7,6 +7,7 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   color: white;
   text-align: center;
   overflow: hidden;
+  flex-shrink: 0;
   width: ${(props) => props.size || '100%'};
   height: ${(props) => props.size || '100%'};
   border-radius: ${(props) => props.borderRadius};

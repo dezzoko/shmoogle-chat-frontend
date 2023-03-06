@@ -74,6 +74,7 @@ const MeetList: FC<MeetListProps> = memo((props: MeetListProps) => {
                   gap="20px"
                   outlined={false}
                   textJustifyContentProperty="flex-start"
+                  isHoverHighlighted={false}
                 >
                   <CameraImage />
                 </ButtonWithIcon>
@@ -84,6 +85,7 @@ const MeetList: FC<MeetListProps> = memo((props: MeetListProps) => {
                   gap="20px"
                   outlined={false}
                   textJustifyContentProperty="flex-start"
+                  isHoverHighlighted={false}
                 >
                   <KeyboardImage />
                 </ButtonWithIcon>

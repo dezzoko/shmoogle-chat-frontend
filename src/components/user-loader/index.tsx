@@ -1,7 +1,9 @@
+import Spinner from 'components/ui/spinner';
 import { FC, PropsWithChildren, useEffect } from 'react';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { userActions } from 'shared/store/reducers/user.slice';
+import { SpinnerContainer } from './styled';
 
 const UserLoader: FC<PropsWithChildren> = (props: PropsWithChildren) => {
   const { children } = props;
@@ -16,7 +18,11 @@ const UserLoader: FC<PropsWithChildren> = (props: PropsWithChildren) => {
   return (
     <>
       {user ? <>{children}</> : <></>}
-      {isUserLoading && <div>Loading...</div>}
+      {isUserLoading && (
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      )}
       {isUserError && <div>Cannot retrieve user</div>}
     </>
   );

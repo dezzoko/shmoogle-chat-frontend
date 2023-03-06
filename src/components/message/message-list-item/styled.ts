@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const MessageWrapper = styled.div<MessageWrapperProps>`
   display: flex;
+  width: 100%;
   margin-top: ${(props) => props.marginTop};
 `;
 
@@ -26,6 +27,7 @@ export const MessageDate = styled.label`
 export const MessageText = styled.p`
   padding: 0;
   margin: 5px 0;
+  width: 100%;
 `;
 
 export const MessageFileContainer = styled.div``;

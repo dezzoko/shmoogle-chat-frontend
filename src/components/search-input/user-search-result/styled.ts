@@ -10,6 +10,7 @@ export const StyledUserSearchResult = styled.div`
 `;
 
 export const UserSearchResultInfo = styled.div`
+  color: #000;
   display: flex;
   flex-direction: column;
   flex: 1;

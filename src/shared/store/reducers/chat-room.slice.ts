@@ -7,7 +7,7 @@ export enum ChatPageOption {
 
 interface ChatRoomState {
   currentOption: ChatPageOption;
-  messageId: number | null;
+  messageId: string | null;
 }
 
 const initialState: ChatRoomState = {
@@ -19,7 +19,7 @@ export const chatRoomSlice = createSlice({
   name: 'chatRoom',
   initialState,
   reducers: {
-    setHighlightedMessage(state, action: PayloadAction<number | null>) {
+    setHighlightedMessage(state, action: PayloadAction<string | null>) {
       state.messageId = action.payload;
     },
     setCurrentOption(state, action: PayloadAction<ChatPageOption>) {

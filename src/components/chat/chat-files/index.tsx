@@ -1,28 +1,37 @@
+import { FC, memo } from 'react';
+
 import ChatOptionSvg from 'components/svg/chat-option-svg';
 import ChatPageOptionButton from 'components/ui/chat-page-option-button';
-import { Chat } from 'core/entities/chat.entity';
-import { FC, memo } from 'react';
 import { FilesItemDiv } from './file-item/styled';
 import FilesList from './files-list';
-import { FilesContainer } from './styled';
+import { ChatFilesButtonContainer, FilesContainer } from './styled';
+import { useChat } from 'shared/hooks/use-chat.hook';
+import ButtonWithIcon from 'components/ui/with-icon-button';
 
 interface ChatFilesProps {
-  chat: Chat;
+  chatId: string;
 }
 
 const ChatFiles: FC<ChatFilesProps> = (props: ChatFilesProps) => {
+  const { chatId } = props;
+  const { chat, messages } = useChat(chatId);
+
+  if (!chat) return null;
+
   return (
     <FilesContainer>
       <FilesItemDiv>
-        <div>File</div>
-        <div>Posted by</div>
-        <div>Date Posted</div>
+        <div>Файл</div>
+        <div>Отправитель</div>
+        <div>Дата отправки</div>
         <div></div>
       </FilesItemDiv>
-      <ChatPageOptionButton title="Add File">
-        <ChatOptionSvg />
-      </ChatPageOptionButton>
-      <FilesList chat={props.chat} />
+      <ChatFilesButtonContainer>
+        <ButtonWithIcon name="Добавить файл" textJustifyContentProperty="flex-start" gap="10px" isHoverHighlighted>
+          <ChatOptionSvg />
+        </ButtonWithIcon>
+      </ChatFilesButtonContainer>
+      <FilesList messages={messages} />
     </FilesContainer>
   );
 };

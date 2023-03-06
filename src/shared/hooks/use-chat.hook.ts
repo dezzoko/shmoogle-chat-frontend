@@ -8,6 +8,10 @@ import { backendMessageToEntityFactory } from 'shared/utils/factories';
 import { useAppSelector } from './app-selector.hook';
 import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
 
+async function uploadFiles(data: FormData) {
+  return MessageService.Instance.uploadFiles(data);
+}
+
 export function useChat(chatId: string) {
   const { user, chats } = useAppSelector((state) => state.userReducer);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -21,23 +25,44 @@ export function useChat(chatId: string) {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
-  const sendMessage = (sendMessageDto: SendMessageDto) => {
+  const sendMessage = async (sendMessageDto: SendMessageDto) => {
     if (!chatSocketEmitter.isConnected() || !user) return;
 
-    const message = { ...sendMessageDto, chatId, creatorId: user.id };
+    const files = sendMessageDto.files;
+    let message;
+    if (!files || !files.length) {
+      console.log('no files');
+      message = { ...sendMessageDto, chatId, creatorId: user.id };
+      chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
+      return;
+    }
 
-    chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append(files[i].name, files[i], files[i].name);
+    }
+
+    console.log(files);
+    console.log('formdata', Object.fromEntries(formData));
+    try {
+      const uploadedFiles = await uploadFiles(formData);
+      console.log(uploadedFiles);
+      message = { ...sendMessageDto, chatId, creatorId: user.id, files: uploadedFiles.map((file) => file.name) };
+
+      chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
+    } catch (error) {
+      console.log('error with files', error);
+      return;
+    }
   };
 
   useEffect(() => {
-    if (!chatSocketEmitter.isConnected()) return;
-
     chatSocketEmitter.subscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
 
     return () => {
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
     };
-  }, [chatSocketEmitter.clientSocket]);
+  }, [chatId, chatSocketEmitter.clientSocket]);
 
   useEffect(() => {
     setMessages([]);
@@ -49,5 +74,6 @@ export function useChat(chatId: string) {
 
 export interface SendMessageDto {
   text: string;
+  files?: File[];
   isResponseToId?: string;
 }

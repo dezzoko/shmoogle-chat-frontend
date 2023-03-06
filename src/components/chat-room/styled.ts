@@ -39,7 +39,7 @@ export const ChatRoomScrollDownButton = styled.a<ChatRoomScrollDownButtonProps>`
   }
 `;
 
-export const ChatRoomFormContainer = styled.div<ChatRoomFormContainerProps>`
+export const ChatRoomFormContainer = styled.form<ChatRoomFormContainerProps>`
   padding: 0 5%;
   padding-top: 5px;
   transition: box-shadow 0.5s ease;

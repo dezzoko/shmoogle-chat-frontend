@@ -15,20 +15,27 @@ export const FilesItemDiv = styled.div<FilesItemDivProps>`
   font-family: 'Roboto', sans-serif;
   box-shadow: inset 0px -2px 0 rgb(100 121 143 / 12%);
 
-  div:nth-child(1) {
+  & > div:nth-child(1) {
     flex: 1 1 450px;
   }
-  div:nth-child(2) {
+  & > div:nth-child(2) {
     flex: 1 1 250px;
   }
-  div:nth-child(3) {
+  & > div:nth-child(3) {
     flex: 1 1 400px;
   }
-  div:nth-child(4) {
+  & > div:nth-child(4) {
     flex: 0 0 85px;
   }
 
   &:hover {
-    background-color: ${(props) => props.type === 'link' && 'rgba(24, 90, 188, 0.1)'};
+    background-color: ${({ theme }) => theme.button.hoverColor};
+    cursor: pointer;
   }
+`;
+
+export const FileItemPostedBy = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
 `;

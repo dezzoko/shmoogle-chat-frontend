@@ -9,3 +9,7 @@ export const FilesContainer = styled.div`
   padding-right: 20px;
   padding-bottom: 40px;
 `;
+
+export const ChatFilesButtonContainer = styled.div`
+  width: 180px;
+`;

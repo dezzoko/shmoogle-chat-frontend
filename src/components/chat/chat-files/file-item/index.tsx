@@ -1,11 +1,14 @@
+import Avatar from 'components/avatar';
 import ChatMessageSvg from 'components/svg/chat-message-svg';
 import RoundButton from 'components/ui/round-button';
+import { File } from 'core/entities/file.entity';
 import { Message } from 'core/entities/message.entity';
-import { FC } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
+import { MessageService } from 'shared/services/message.service';
 import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 import { getNativeDate } from 'shared/utils/transform-date';
-import { FilesItemDiv } from './styled';
+import { FileItemPostedBy, FilesItemDiv } from './styled';
 
 interface FileItemProps {
   message: Message;
@@ -16,21 +19,40 @@ export const FileItem: FC<FileItemProps> = (props: FileItemProps) => {
 
   const dispatch = useAppDispatch();
   const { message } = props;
+
+  const findMessageHandler = (event: SyntheticEvent) => {
+    dispatch(setHighlightedMessage(message.id));
+    event.stopPropagation();
+  };
+
+  const downloadFileHandler = (file: File) => {
+    const { id, name } = file;
+
+    MessageService.Instance.getFile(id).then((response) => {
+      const href = URL.createObjectURL(response);
+      const link = document.createElement('a');
+      link.href = href;
+      link.setAttribute('download', name);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    });
+  };
+
   return (
     <>
       {message.files?.map((file) => {
         return (
-          <FilesItemDiv key={file.id} type="link">
+          <FilesItemDiv key={file.id} onClick={() => downloadFileHandler(file)}>
             <div>{file.name}</div>
-            <div>{message.user.username}</div>
+            <FileItemPostedBy>
+              <Avatar src={message.user.avatarUrl} label={message.user.username[0]} size="24px" />
+              {message.user.username}
+            </FileItemPostedBy>
             <div>{getNativeDate(message.creationDate)}</div>
             <div>
-              <RoundButton
-                padding="5px"
-                onClick={() => {
-                  dispatch(setHighlightedMessage(message.id));
-                }}
-              >
+              <RoundButton padding="5px" onClick={findMessageHandler}>
                 <ChatMessageSvg />
               </RoundButton>
             </div>

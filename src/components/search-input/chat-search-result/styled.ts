@@ -10,6 +10,7 @@ export const StyledChatSearchResult = styled.div`
 `;
 
 export const ChatSearchResultInfo = styled.div`
+  color: #000;
   display: flex;
   flex-direction: column;
   flex: 1;

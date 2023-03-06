@@ -1,12 +1,7 @@
-import { Chat } from '../entities/chat.entity';
 import { User } from '../entities/user.entity';
-import { IGenericService } from './generic-service.interface';
 
-export interface IChatService extends IGenericService<Chat> {
-  getByUserId(id: string): Promise<Chat[]>;
-  create(instance: CreateChatDto): Promise<Chat>;
-  update(id: string, data: UpdateChatDto): Promise<Chat | null>;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IChatService {}
 
 export interface CreateChatDto {
   name: string;

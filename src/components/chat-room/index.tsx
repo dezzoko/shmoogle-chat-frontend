@@ -1,8 +1,5 @@
-import { FC, useEffect, useState, memo, useRef, useLayoutEffect } from 'react';
+import { FC, useState, memo, useRef, useLayoutEffect } from 'react';
 
-import { Message } from 'core/entities/message.entity';
-import { Chat } from 'core/entities/chat.entity';
-import { MessageService } from 'shared/services/message.service';
 import {
   StyledChatRoom,
   ChatRoomViewBox,
@@ -14,8 +11,6 @@ import ChatRoomForm from './chat-form';
 import MessageList from 'components/message/message-list';
 import ChatGroupGreeter from './chat-group-greeter';
 import ChatPrivateGreeter from './dm-greeter';
-import { useAppSelector } from 'shared/hooks/app-selector.hook';
-import { CreateMessageDto } from 'core/interfaces/message-service.interface';
 import { useChat } from 'shared/hooks/use-chat.hook';
 
 interface ChatRoomProps {
@@ -23,29 +18,17 @@ interface ChatRoomProps {
 }
 
 // TODO: fix scrolldown button
-
 const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
   const { chatId } = props;
-  const { user } = useAppSelector((state) => state.userReducer);
-
-  //const [messages, setMessages] = useState<Message[]>([]);
 
   const { chat, messages, sendMessage } = useChat(chatId);
-
   if (!chat) {
     return null;
   }
-
   const [formText, setFormText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [scrolledProgress, setScrolledProgress] = useState(100);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   fetchMessages(chat.id).then((result) => {
-  //     setMessages(result);
-  //   });
-  // }, [chat]);
 
   useLayoutEffect(() => {
     if (scrolledProgress > 95) {
@@ -77,13 +60,7 @@ const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
   };
 
   const sendClickHandler = () => {
-
-    sendMessage({ text: formText });
-
-    // const instance = { chatId: chat.id, text: formText, user: user! };
-    // addMessage(instance).then((msg) => {
-    //   setMessages([...messages, msg]);
-    // });
+    sendMessage({ text: formText, files });
   };
 
   return (
