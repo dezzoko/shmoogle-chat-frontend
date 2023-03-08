@@ -11,6 +11,7 @@ function App() {
   const [theme] = useAppTheme();
 
   useChats();
+  
 
   return (
     <ThemeProvider theme={theme}>
