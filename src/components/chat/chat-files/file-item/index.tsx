@@ -1,14 +1,14 @@
-import Avatar from 'components/avatar';
-import ChatMessageSvg from 'components/svg/chat-message-svg';
-import RoundButton from 'components/ui/round-button';
+import { FC, MouseEvent } from 'react';
+
 import { File } from 'core/entities/file.entity';
 import { Message } from 'core/entities/message.entity';
-import { FC, SyntheticEvent } from 'react';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { MessageService } from 'shared/services/message.service';
 import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 import { getNativeDate } from 'shared/utils/transform-date';
 import { FileItemPostedBy, FilesItemDiv } from './styled';
+import ChatMessageSvg from 'components/svg/chat-message-svg';
+import { Avatar, RoundButton } from 'components/ui';
 
 interface FileItemProps {
   message: Message;
@@ -20,7 +20,7 @@ export const FileItem: FC<FileItemProps> = (props: FileItemProps) => {
   const dispatch = useAppDispatch();
   const { message } = props;
 
-  const findMessageHandler = (event: SyntheticEvent) => {
+  const findMessageHandler = (event: MouseEvent<HTMLAnchorElement>) => {
     dispatch(setHighlightedMessage(message.id));
     event.stopPropagation();
   };

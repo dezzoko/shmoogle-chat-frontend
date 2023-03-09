@@ -2,28 +2,23 @@ import { FC, useEffect, useMemo, useState } from 'react';
 
 import { User } from 'core/entities/user.entity';
 import { Chat } from 'core/entities/chat.entity';
+import { ServerEvents } from 'core/constants/api';
 import { UserService } from 'shared/services/user.service';
+import { useAppSelector } from 'shared/hooks/app-selector.hook';
+import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
+import { backendUserToEntityFactory } from 'shared/utils/factories';
 import {
-  CreateChatFormButtons,
   CreateChatFormInfo,
   CreateChatFormInputContainer,
   CreateChatFormInputs,
-  CreateChatFormTitle,
   CreateChatFormUsers,
-  StyledCreateChatForm,
   UserResultContainer,
   UserResults,
 } from './styled';
-import Input from 'components/ui/input';
-import ButtonWithIcon from 'components/ui/with-icon-button';
+import { FormBody, FormButtons, FormTitle } from '../styled';
 import SmileSvg from 'components/svg/smile-svg';
 import UserSearchResult from 'components/search-input/user-search-result';
-import Chip from 'components/ui/chip';
-import { useAppSelector } from 'shared/hooks/app-selector.hook';
-import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
-import { ServerEvents } from 'core/constants/api';
-import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
-import { backendUserToEntityFactory } from 'shared/utils/factories';
+import { Input, Button, Chip } from 'components/ui';
 
 interface CreateChatFormProps {
   onCreateClick?: (chat?: Chat) => void;
@@ -37,9 +32,8 @@ async function fetchUsers() {
 //TODO: Add error handling
 
 const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => {
-  const { onCreateClick, onCancelClick } = props;
+  const { onCancelClick } = props;
 
-  const dispatch = useAppDispatch();
   const { user: loggedUser } = useAppSelector((state) => state.userReducer);
 
   const [name, setName] = useState('');
@@ -84,27 +78,7 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
     };
 
     chatSocketEmitter.emit(ServerEvents.CREATE_CHAT, chat);
-    // if (onCreateClick) {
-    //   onCreateClick(chat);
-    // }
-
-    // createChat({
-    //   name: name,
-    //   isGroup: true,
-    //   creatorId: loggedUser.id,
-    //   users: members,
-    //   isHistorySaved: true,
-    // })
-    //   .then((chat) => {
-    //     cancelClickHandler();
-    //     dispatch(fetchUserChats());
-    //     if (onCreateClick) {
-    //       onCreateClick(chat);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //   });
+    cancelClickHandler();
   };
 
   const cancelClickHandler = () => {
@@ -125,8 +99,8 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
   }, []);
 
   return (
-    <StyledCreateChatForm>
-      <CreateChatFormTitle>Создать чат-группу</CreateChatFormTitle>
+    <FormBody>
+      <FormTitle>Создать чат-группу</FormTitle>
       <CreateChatFormInfo>
         <div>
           <SmileSvg />
@@ -176,11 +150,11 @@ const CreateChatForm: FC<CreateChatFormProps> = (props: CreateChatFormProps) => 
           ))}
         </UserResults>
       </CreateChatFormUsers>
-      <CreateChatFormButtons>
-        <ButtonWithIcon name="Отмена" onClick={cancelClickHandler} />
-        <ButtonWithIcon name="Создать" onClick={createClickHandler} />
-      </CreateChatFormButtons>
-    </StyledCreateChatForm>
+      <FormButtons>
+        <Button name="Отмена" onClick={cancelClickHandler} />
+        <Button name="Создать" onClick={createClickHandler} />
+      </FormButtons>
+    </FormBody>
   );
 };
 

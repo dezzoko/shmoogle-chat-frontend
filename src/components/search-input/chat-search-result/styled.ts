@@ -15,8 +15,3 @@ export const ChatSearchResultInfo = styled.div`
   flex-direction: column;
   flex: 1;
 `;
-
-export const ChatSearchResultLogin = styled.label`
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.text.secondaryColor};
-`;

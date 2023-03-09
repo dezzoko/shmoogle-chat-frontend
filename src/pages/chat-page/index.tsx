@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { routes } from 'core/constants/routes';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
-import ChatRoom from 'components/chat-room';
+import ChatRoom from 'components/chat/chat-room';
 import OptionRadio from 'components/ui/option-radiobutton';
 import ChatHeader from 'components/chat/chat-header';
 import {

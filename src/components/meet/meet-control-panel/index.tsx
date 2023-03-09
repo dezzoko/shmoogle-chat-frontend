@@ -6,9 +6,8 @@ import MicroOffSvg from 'components/svg/micro-off-svg';
 import MicroOnSvg from 'components/svg/micro-on-svg';
 import VideoOffSvg from 'components/svg/video-off-svg';
 import VideoOnSvg from 'components/svg/video-on-svg';
-import Tooltip from 'components/tooltip';
-import RoundButton from 'components/ui/round-button';
 import hangupImage from 'assets/end-call.png';
+import { Tooltip, RoundButton } from 'components/ui';
 
 interface MeetControlPanelProps {
   mediaDevicesEmitter: MediaDevicesEmitter;

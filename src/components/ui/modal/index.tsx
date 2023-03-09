@@ -1,4 +1,5 @@
 import { FC, memo, MouseEvent, ReactNode } from 'react';
+import ReactDOM from 'react-dom';
 
 import CrossSvg from 'components/svg/cross-svg';
 import RoundButton from '../round-button';
@@ -20,7 +21,7 @@ const Modal: FC<ModalProps> = memo((props: ModalProps) => {
     setHidden(true);
   };
 
-  return (
+  return ReactDOM.createPortal(
     <StyledModal isHidden={isHidden} onClick={clickHandler}>
       <ModalBody onClick={(e) => e.stopPropagation()} scrollable={scrollable}>
         {title ? (
@@ -35,7 +36,8 @@ const Modal: FC<ModalProps> = memo((props: ModalProps) => {
         )}
         <ModalContent hasPadding={hasPadding}>{children}</ModalContent>
       </ModalBody>
-    </StyledModal>
+    </StyledModal>,
+    document.body,
   );
 });
 

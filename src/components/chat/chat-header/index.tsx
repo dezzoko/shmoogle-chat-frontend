@@ -2,21 +2,17 @@ import { FC, memo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Chat } from 'core/entities/chat.entity';
-import { UserStatus } from 'core/entities/status.entity';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { searchInputActions } from 'shared/store/reducers/search-input.slice';
-import { ChatHeaderActions, ChatHeaderChatInfo, ChatHeaderFlexContainer, StyledChatHeader } from './styled';
+import { ChatHeaderActions, ChatHeaderFlexContainer, StyledChatHeader } from './styled';
 import ChatFilledSvg from 'components/svg/chat-filled-svg';
 import CrossArrowsSvg from 'components/svg/cross-arrows-svg';
 import LeftArrowSvg from 'components/svg/left-arrow-svg';
 import SearchSvg from 'components/svg/search-svg';
-import Tooltip from 'components/tooltip';
-import ListCheckbox from 'components/ui/list-checkbox';
-import RoundButton from 'components/ui/round-button';
 import ChatInfoButton from '../chat-info-button';
-import FloatingMenu from 'components/ui/floating-menu';
 import ChatOptionsMenu from '../chat-options-menu';
+import { Tooltip, RoundButton, FloatingMenu } from 'components/ui';
 
 interface ChatHeaderProps {
   chat: Chat;

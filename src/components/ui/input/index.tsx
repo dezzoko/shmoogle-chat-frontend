@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, ReactNode, useLayoutEffect, useRef } from 'react';
+import { ChangeEvent, FC, ReactNode, useRef } from 'react';
+
 import { InputContainer, InputLengthIndicator, StyledInput } from './styled';
 
 interface InputProps {
@@ -11,7 +12,7 @@ interface InputProps {
   children?: ReactNode;
 }
 
-// TODO: add focus animation, add as option
+// TODO: add as option
 
 const Input: FC<InputProps> = (props: InputProps) => {
   const { value, setValue, onSubmit, placeholder, children, maxLength, isLengthIndicator } = props;

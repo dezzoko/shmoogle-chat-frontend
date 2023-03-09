@@ -1,9 +1,10 @@
+import { FC } from 'react';
+
+import { ActionContainer } from './styled';
 import AppsSquaredSvg from 'components/svg/apps-squared-svg';
 import ManageUsersSvg from 'components/svg/manage-users-svg';
 import MessageUnreaded from 'components/svg/message-unreaded-svg';
 import PenSvg from 'components/svg/pen-svg';
-import { FC } from 'react';
-import { ActionContainer } from './styled';
 
 const ChatOptionsMenu: FC = () => {
   return (

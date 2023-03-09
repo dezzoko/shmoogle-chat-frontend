@@ -1,20 +1,19 @@
 import { FC, memo } from 'react';
 
-import ChatOptionSvg from 'components/svg/chat-option-svg';
-import ChatPageOptionButton from 'components/ui/chat-page-option-button';
-import { FilesItemDiv } from './file-item/styled';
-import FilesList from './files-list';
-import { ChatFilesButtonContainer, FilesContainer } from './styled';
 import { useChat } from 'shared/hooks/use-chat.hook';
-import ButtonWithIcon from 'components/ui/with-icon-button';
+import { FilesItemDiv } from './file-item/styled';
+import { ChatFilesButtonContainer, FilesContainer } from './styled';
+import ChatOptionSvg from 'components/svg/chat-option-svg';
+import FilesList from './files-list';
+import { Button, Spinner } from 'components/ui';
 
 interface ChatFilesProps {
   chatId: string;
 }
 
-const ChatFiles: FC<ChatFilesProps> = (props: ChatFilesProps) => {
+const ChatFiles: FC<ChatFilesProps> = memo((props: ChatFilesProps) => {
   const { chatId } = props;
-  const { chat, messages } = useChat(chatId);
+  const { chat, messages, isMessagesLoading, isMessagesError } = useChat(chatId);
 
   if (!chat) return null;
 
@@ -24,17 +23,17 @@ const ChatFiles: FC<ChatFilesProps> = (props: ChatFilesProps) => {
         <div>Файл</div>
         <div>Отправитель</div>
         <div>Дата отправки</div>
-        <div></div>
+        <div />
       </FilesItemDiv>
       <ChatFilesButtonContainer>
-        <ButtonWithIcon name="Добавить файл" textJustifyContentProperty="flex-start" gap="10px" isHoverHighlighted>
+        <Button name="Добавить файл" textJustifyContentProperty="flex-start" gap="10px" isHoverHighlighted>
           <ChatOptionSvg />
-        </ButtonWithIcon>
+        </Button>
       </ChatFilesButtonContainer>
-      <FilesList messages={messages} />
+      {isMessagesLoading ? <Spinner /> : <FilesList messages={messages} />}
     </FilesContainer>
   );
-};
+});
 
 ChatFiles.displayName = 'ChatFiles';
-export default memo(ChatFiles);
+export default ChatFiles;

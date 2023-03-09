@@ -1,4 +1,4 @@
-import { FC, ForwardedRef, forwardRef, memo, PropsWithoutRef } from 'react';
+import { FC, ForwardedRef, forwardRef, memo } from 'react';
 
 import { Message } from 'core/entities/message.entity';
 import { transformDate } from 'shared/utils/transform-date';
@@ -10,10 +10,9 @@ import {
   MessageUserAvatar,
   MessageWrapper,
 } from './styled';
-import Avatar from '../../avatar';
 import ManagerSvg from '../../svg/manager-svg';
-import Tooltip from '../../tooltip';
 import MessageFile from '../message-file';
+import { Avatar, Tooltip } from 'components/ui';
 
 interface MessageListItemProps {
   message: Message;
@@ -25,6 +24,7 @@ interface MessageListItemProps {
 const MessageListItem: FC<MessageListItemProps> = forwardRef<HTMLDivElement, MessageListItemProps>(
   (props: MessageListItemProps, ref) => {
     const { message, isManager, onlyText } = props;
+
     const [relative, time, , monthDay, monthString] = transformDate(message.creationDate);
     const readableDate = `${monthDay} ${monthString.slice(0, 3)}., ${time}`;
 
@@ -62,4 +62,4 @@ const MessageListItem: FC<MessageListItemProps> = forwardRef<HTMLDivElement, Mes
 
 MessageListItem.displayName = 'MessageListItem';
 
-export default MessageListItem;
+export default memo(MessageListItem);

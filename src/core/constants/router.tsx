@@ -5,11 +5,11 @@ import App from 'App';
 import { ChatPage } from 'pages/chat-page';
 import { WelcomePage } from 'pages/welcome-page';
 import { DmPage } from 'pages/dm-page';
-import AuthPage from 'pages/auth';
-import AuthRequire from 'components/auth-require';
-import MeetRoomRequire from 'components/meet/meet-room-require';
+import AuthPage from 'pages/auth-page';
+import AuthRequire from 'components/utils/auth-require';
+import MeetRoomRequire from 'components/utils/meet-room-require';
 import MeetPage from 'pages/meet-page';
-import UserLoader from 'components/user-loader';
+import UserLoader from 'components/utils/user-loader';
 
 export const router = createBrowserRouter([
   {

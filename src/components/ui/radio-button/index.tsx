@@ -1,7 +1,8 @@
 import { FC, ReactNode, useId, memo, InputHTMLAttributes } from 'react';
+
 import { HiddenInput, RadioButtonLabel, StyledRadioButton } from './styled';
 
-interface RadioButtonProps extends InputHTMLAttributes<any> {
+interface RadioButtonProps extends InputHTMLAttributes<HTMLInputElement> {
   children: ReactNode;
 }
 

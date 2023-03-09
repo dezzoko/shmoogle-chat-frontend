@@ -10,7 +10,7 @@ import {
   SearchInputResultsContainer,
   StyledSearchInput,
 } from './styled';
-import Tooltip from '../tooltip';
+import Tooltip from '../ui/tooltip';
 import RoundButton from '../ui/round-button';
 import CrossSvg from 'components/svg/cross-svg';
 import SearchSvg from 'components/svg/search-svg';

@@ -7,7 +7,7 @@ import { userActions } from '../reducers/user.slice';
 export function* getUserWorker(): any {
   console.log('user fetch worker!');
   try {
-    const user = yield call(UserService.Instance.getSelf);
+    const user = yield call(() => UserService.Instance.getSelf());
     yield put(userActions.setLoggedUser(user));
   } catch (error) {
     yield put(userActions.setLoggedUserError());

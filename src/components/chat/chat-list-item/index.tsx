@@ -1,5 +1,7 @@
 import { FC, useState, memo } from 'react';
 
+import { useChat } from 'shared/hooks/use-chat.hook';
+import { getNativeDate, getRelativeDate } from 'shared/utils/transform-date';
 import {
   ChatListActions,
   ChatListItemInfo,
@@ -7,12 +9,10 @@ import {
   ChatListItemName,
   StyledChatListItem,
 } from './styled';
-import Avatar, { AvatarVariants } from '../../avatar';
-import RoundButton from '../../ui/round-button';
+import { AvatarVariants } from 'components/ui/avatar';
+import { RoundButton, Avatar } from 'components/ui';
 import DiagonalArrowSvg from 'components/svg/diagonal-arrow-svg';
 import OptionDotsSvg from 'components/svg/option-dots-svg';
-import { getNativeDate, getRelativeDate } from 'shared/utils/transform-date';
-import { useChat } from 'shared/hooks/use-chat.hook';
 
 interface ChatListItemProps {
   chatId: string;

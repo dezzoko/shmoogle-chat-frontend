@@ -14,7 +14,10 @@ async function uploadFiles(data: FormData) {
 
 export function useChat(chatId: string) {
   const { user, chats } = useAppSelector((state) => state.userReducer);
+
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isMessagesLoading, setMessagesLoading] = useState(true);
+  const [isMessagesError, setMessagesError] = useState<Error | null>(null);
 
   const chat = chats.find((chat) => chat.id === chatId);
 
@@ -31,7 +34,6 @@ export function useChat(chatId: string) {
     const files = sendMessageDto.files;
     let message;
     if (!files || !files.length) {
-      console.log('no files');
       message = { ...sendMessageDto, chatId, creatorId: user.id };
       chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
       return;
@@ -42,16 +44,12 @@ export function useChat(chatId: string) {
       formData.append(files[i].name, files[i], files[i].name);
     }
 
-    console.log(files);
-    console.log('formdata', Object.fromEntries(formData));
     try {
       const uploadedFiles = await uploadFiles(formData);
-      console.log(uploadedFiles);
       message = { ...sendMessageDto, chatId, creatorId: user.id, files: uploadedFiles.map((file) => file.name) };
-
       chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
     } catch (error) {
-      console.log('error with files', error);
+      alert(error);
       return;
     }
   };
@@ -65,11 +63,18 @@ export function useChat(chatId: string) {
   }, [chatId, chatSocketEmitter.clientSocket]);
 
   useEffect(() => {
-    setMessages([]);
-    MessageService.Instance.getByChatId(chatId).then((fetchedMessages) => setMessages(fetchedMessages));
+    setMessagesLoading(true);
+    setMessagesError(null);
+
+    MessageService.Instance.getByChatId(chatId)
+      .then((fetchedMessages) => {
+        setMessages(fetchedMessages);
+        setMessagesLoading(false);
+      })
+      .catch((error) => setMessagesError(error));
   }, [chatId]);
 
-  return { chat, messages, sendMessage };
+  return { chat, messages, sendMessage, isMessagesLoading, isMessagesError };
 }
 
 export interface SendMessageDto {

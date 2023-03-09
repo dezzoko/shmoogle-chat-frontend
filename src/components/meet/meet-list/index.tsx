@@ -1,5 +1,6 @@
 import { FC, useState, memo, ChangeEvent } from 'react';
 
+import { ConferenceRoomService } from 'shared/services/conference-room.service';
 import {
   MeetListItemContainer,
   CheckboxContainer,
@@ -10,12 +11,9 @@ import {
   CameraImage,
   KeyboardImage,
 } from './styled';
-import ListCheckbox from '../../ui/list-checkbox';
-import ButtonWithIcon from 'components/ui/with-icon-button';
-import Modal from 'components/ui/modal';
 import JoinMeetForm from 'components/forms/join-meet-form';
-import { ConferenceRoomService } from 'shared/services/conference-room.service';
 import NewMeet from '../new-meet';
+import { Button, Modal, ListCheckbox } from 'components/ui';
 
 interface MeetListProps {
   name: string;
@@ -69,7 +67,7 @@ const MeetList: FC<MeetListProps> = memo((props: MeetListProps) => {
           {isOpen && (
             <>
               <MeetListItemContainer onClick={newMeetHandler}>
-                <ButtonWithIcon
+                <Button
                   name="Новая встреча"
                   gap="20px"
                   outlined={false}
@@ -77,10 +75,10 @@ const MeetList: FC<MeetListProps> = memo((props: MeetListProps) => {
                   isHoverHighlighted={false}
                 >
                   <CameraImage />
-                </ButtonWithIcon>
+                </Button>
               </MeetListItemContainer>
               <MeetListItemContainer onClick={toMeetHandler}>
-                <ButtonWithIcon
+                <Button
                   name="Перейти на встречу"
                   gap="20px"
                   outlined={false}
@@ -88,7 +86,7 @@ const MeetList: FC<MeetListProps> = memo((props: MeetListProps) => {
                   isHoverHighlighted={false}
                 >
                   <KeyboardImage />
-                </ButtonWithIcon>
+                </Button>
               </MeetListItemContainer>
             </>
           )}

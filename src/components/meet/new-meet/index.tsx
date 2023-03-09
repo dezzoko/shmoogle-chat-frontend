@@ -1,8 +1,9 @@
-import ButtonWithIcon from 'components/ui/with-icon-button';
-import { routes } from 'core/constants/routes';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { routes } from 'core/constants/routes';
 import { NewMeetButtons, NewMeetText, NewMeetTitle, StyledNewMeet } from './styled';
+import { Button } from 'components/ui';
 
 interface NewMeetProps {
   joinToken: string;
@@ -30,11 +31,11 @@ const NewMeet: FC<NewMeetProps> = (props: NewMeetProps) => {
       <label>{joinToken}</label>
       <NewMeetButtons>
         {isCopied ? (
-          <ButtonWithIcon name={'✔'} disabled={true} />
+          <Button name={'✔'} disabled={true} />
         ) : (
-          <ButtonWithIcon name="Скопировать код" onClick={copyClickHandler} />
+          <Button name="Скопировать код" onClick={copyClickHandler} />
         )}
-        <ButtonWithIcon name="Присоединиться" onClick={joinClickHandler} />
+        <Button name="Присоединиться" onClick={joinClickHandler} />
       </NewMeetButtons>
     </StyledNewMeet>
   );

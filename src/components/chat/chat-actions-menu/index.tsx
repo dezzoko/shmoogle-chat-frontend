@@ -8,12 +8,14 @@ import AddUserSvg from 'components/svg/add-user-svg';
 import SupportSvg from 'components/svg/support-svg';
 import ManagerSvg from 'components/svg/manager-svg';
 import SearchInputResultsList from 'components/search-input/search-input-result-list';
-import Modal from 'components/ui/modal';
 import CreateChatForm from 'components/forms/create-chat-form';
+import { Modal } from 'components/ui';
+import InviteDmForm from 'components/forms/invite-dm-form';
 
 const ChatActionsMenu: FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isCreateChatModalHidden, setCreateChatModalHidden] = useState(true);
+  const [isInviteModalHidden, setInviteModalHidden] = useState(true);
   const navigate = useNavigate();
 
   const chatClickHandler = (chatId: string) => {
@@ -59,7 +61,7 @@ const ChatActionsMenu: FC = () => {
             <ManagerSvg />
             <span>Обзор групп</span>
           </ActionContainer>
-          <ActionContainer>
+          <ActionContainer onClick={() => setInviteModalHidden(false)}>
             <SupportSvg />
             <span>Запросы на переписку</span>
           </ActionContainer>
@@ -67,6 +69,9 @@ const ChatActionsMenu: FC = () => {
       )}
       <Modal isHidden={isCreateChatModalHidden} setHidden={setCreateChatModalHidden}>
         <CreateChatForm onCancelClick={modalCancelHandler} onCreateClick={goToChat} />
+      </Modal>
+      <Modal isHidden={isInviteModalHidden} setHidden={setInviteModalHidden}>
+        <InviteDmForm />
       </Modal>
     </StyledChatActionsMenu>
   );

@@ -1,18 +1,5 @@
 import styled from 'styled-components';
 
-export const StyledCreateChatForm = styled.div`
-  background: ${({ theme }) => theme.block.background};
-  border-radius: 10px;
-  padding: 20px;
-  overflow: visible;
-`;
-
-export const CreateChatFormTitle = styled.h2`
-  margin: 0;
-  padding: 0;
-  font-weight: 400;
-`;
-
 export const CreateChatFormInfo = styled.div`
   margin-top: 20px;
   display: flex;
@@ -66,14 +53,4 @@ export const CreateChatFormUsers = styled.div`
   &:focus-within ${UserResults} {
     display: block;
   }
-`;
-
-export const CreateChatFormButtons = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-top: 30px;
-  padding-top: 20px;
-  gap: 15px;
-  box-shadow: inset 0 2px 0 ${({ theme }) => theme.block.shadowColor};
 `;

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { FileItem, ImageItem, MessageFeatures } from './styled';
 
 interface UploadedFilesListProps {
@@ -11,9 +12,9 @@ const UploadedFilesList: FC<UploadedFilesListProps> = (props: UploadedFilesListP
 
   return (
     <MessageFeatures>
-      {files.map((f, i) => {
-        if (f.type !== 'image/png') {
-          return <FileItem key={i}> {f.name}</FileItem>;
+      {files.map((file, i) => {
+        if (file.type !== 'image/png') {
+          return <FileItem key={i}> {file.name}</FileItem>;
         }
       })}
 

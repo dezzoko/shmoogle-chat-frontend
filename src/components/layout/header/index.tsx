@@ -1,24 +1,21 @@
 import { FC, memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { routes } from 'core/constants/routes';
 import logo from 'assets/logo_chat.png';
-import { FlexContainer } from '../styled';
-import { LogoContainer, SearchInputContainer, StyledHeader } from './styled';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { sidebarActions } from 'shared/store/reducers/sidebar.slice';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
-import RoundButton from '../../ui/round-button';
-import SearchInput from '../../search-input';
-import Tooltip from '../../tooltip';
-import Avatar from '../../avatar';
+import { LogoContainer, SearchInputContainer, StyledHeader } from './styled';
+import { FlexContainer } from '../styled';
 import StatusSelect from 'components/status-select';
 import MenuSvg from 'components/svg/menu-svg';
 import SupportSvg from 'components/svg/support-svg';
 import OptionsGearSvg from 'components/svg/options-gear-svg';
 import AppsSvg from 'components/svg/apps-svg';
-import { routes } from 'core/constants/routes';
-import Modal from 'components/ui/modal';
-import OptionsList from 'components/options';
+import OptionsList from 'components/layout/header/options';
+import SearchInput from '../../search-input';
+import { RoundButton, Modal, Tooltip, Avatar } from 'components/ui';
 
 const Header: FC = memo(() => {
   const dispatch = useAppDispatch();
@@ -76,9 +73,9 @@ const Header: FC = memo(() => {
                 <AppsSvg />
               </RoundButton>
             </Tooltip>
-            <Tooltip text={`Аккаунт Shmoogle\n ${user?.username} \n ${user?.login}`}>
+            <Tooltip text={`Аккаунт Shmoogle\n${user?.username}\n${user?.login}`}>
               <RoundButton size="32px" padding="4px">
-                <Avatar src={user?.avatarUrl} label={user?.username[0] || 'u'} />
+                <Avatar src={user?.avatarUrl} label={user?.username[0] || 'U'} />
               </RoundButton>
             </Tooltip>
           </FlexContainer>

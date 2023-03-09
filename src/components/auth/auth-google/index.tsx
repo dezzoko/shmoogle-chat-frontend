@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import GoogleSvg from 'components/svg/google-svg';
-import Tooltip from 'components/tooltip';
-import RoundButton from 'components/ui/round-button';
+
 import { SERVER_URL } from 'core/constants/api';
+import GoogleSvg from 'components/svg/google-svg';
+import { RoundButton, Tooltip } from 'components/ui';
 
 const AuthGoogleButton: FC = () => {
   const clickHandler = () => {

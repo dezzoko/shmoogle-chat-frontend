@@ -1,12 +1,12 @@
-import { FC, memo, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 
 import { User } from 'core/entities/user.entity';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
+import { backendUserToEntityFactory } from 'shared/utils/factories';
 import { UserService } from 'shared/services/user.service';
 import { ResultContainer, StyledSearchInputResultsList } from './styled';
 import UserSearchResult from '../user-search-result';
 import ChatSearchResult from '../chat-search-result';
-import { backendUserToEntityFactory } from 'shared/utils/factories';
 
 interface SearchInputResultsListProps {
   filterValue: string;
@@ -25,11 +25,10 @@ const SearchInputResultsList: FC<SearchInputResultsListProps> = memo((props: Sea
 
   const { user, chats } = useAppSelector((state) => state.userReducer);
 
-  const filterUsers = useMemo(
-    () => users.filter((u) => u.login.includes(filterValue) || (u.username.includes(filterValue) && u.id != user?.id)),
-    [filterValue, user],
+  const filterUsers = users.filter(
+    (u) => u.login.includes(filterValue) || (u.username.includes(filterValue) && u.id != user?.id),
   );
-  const filterChats = useMemo(() => chats.filter((ch) => ch.name.includes(filterValue) && ch.isGroup), [filterValue]);
+  const filterChats = chats.filter((ch) => ch.name.includes(filterValue) && ch.isGroup);
 
   const findDmByUserId = (userId: string) => {
     return chats.find((chat) => !chat.isGroup && chat.users.find((u) => u.id === userId))?.id;

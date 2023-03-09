@@ -1,9 +1,9 @@
-import Input from 'components/ui/input';
-import ButtonWithIcon from 'components/ui/with-icon-button';
-import { routes } from 'core/constants/routes';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { JoinMeetFormButtons, JoinMeetFormText, JoinMeetFormTitle, StyledJoinMeetForm } from './styled';
+
+import { routes } from 'core/constants/routes';
+import { Input, Button } from 'components/ui';
+import { FormBody, FormButtons, FormText, FormTitle } from '../styled';
 
 interface JoinMeetFormProps {
   onJoinClick?: (value?: string) => void;
@@ -25,15 +25,15 @@ const JoinMeetForm: FC<JoinMeetFormProps> = (props: JoinMeetFormProps) => {
   };
 
   return (
-    <StyledJoinMeetForm>
-      <JoinMeetFormTitle>У вас есть код встречи?</JoinMeetFormTitle>
-      <JoinMeetFormText>Чтобы присоединиться к встрече, введите код, предоставленный организатором.</JoinMeetFormText>
+    <FormBody>
+      <FormTitle>У вас есть код встречи?</FormTitle>
+      <FormText>Чтобы присоединиться к встрече, введите код, предоставленный организатором.</FormText>
       <Input placeholder="Введите код встречи" value={value} setValue={setValue}></Input>
 
-      <JoinMeetFormButtons>
-        <ButtonWithIcon name="Присоединиться" onClick={joinClickHandler} />
-      </JoinMeetFormButtons>
-    </StyledJoinMeetForm>
+      <FormButtons>
+        <Button name="Присоединиться" onClick={joinClickHandler} />
+      </FormButtons>
+    </FormBody>
   );
 };
 

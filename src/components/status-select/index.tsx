@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { UserStatus } from 'core/entities/status.entity';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { OnlineIcon, StatusSelectButton, StyledStatusSelect } from './styled';
-import ListCheckbox from 'components/ui/list-checkbox';
+import { ListCheckbox } from 'components/ui';
 import NoBotherSvg from '../svg/no-bother-svg';
 import OfflineSvg from '../svg/offline-svg';
 

@@ -12,14 +12,14 @@ import meetIco from 'assets/meet.png';
 import RoundButton from '../../ui/round-button';
 import ChatList from '../../chat/chat-list';
 import ChatListItem from '../../chat/chat-list-item';
-import { AvatarVariants } from 'components/avatar';
+import { AvatarVariants } from 'components/ui/avatar';
 import ChatActionsMenu from 'components/chat/chat-actions-menu';
 import MeetList from 'components/meet/meet-list';
 
 const Sidebar: FC = memo(() => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isOpened, isActive, isChatsOpen, isGroupsOpen, isMeetsOpen } = useAppSelector(
+  const { isOpened, isActive, isBlocked, isChatsOpen, isGroupsOpen, isMeetsOpen } = useAppSelector(
     (state) => state.sidebarReducer,
   );
   const { chats } = useAppSelector((state) => state.userReducer);
@@ -36,17 +36,17 @@ const Sidebar: FC = memo(() => {
     navigate(`${routes.dm}${dmId}`);
   }, []);
 
-  const mouseEnterHandler = useCallback(() => {
+  const mouseEnterHandler = () => {
     if (!isActive) {
       dispatch(setIsOpened(true));
     }
-  }, [isActive, setIsOpened]);
+  };
 
-  const mouseLeaveHandler = useCallback(() => {
-    if (!isActive) {
+  const mouseLeaveHandler = () => {
+    if (!isActive && isBlocked) {
       dispatch(setIsOpened(false));
     }
-  }, [isActive, setIsOpened]);
+  };
 
   const openChatsHandler = useCallback(
     (value: boolean) => {

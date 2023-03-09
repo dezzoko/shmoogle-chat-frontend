@@ -3,13 +3,12 @@ import { FC, useState, memo, ChangeEvent, ReactNode } from 'react';
 import { Chat } from 'core/entities/chat.entity';
 import { ChatListItemContainer, CheckboxContainer, ListBody, ListContainer, ListHeader, NameContainer } from './styled';
 import ChatListItem from '../chat-list-item';
-import Tooltip from '../../tooltip';
-import ListCheckbox from '../../ui/list-checkbox';
-import RoundButton from '../../ui/round-button';
 import PlusSvg from 'components/svg/plus-svg';
 import ChatSvg from 'components/svg/chat-svg';
-import { AvatarVariants } from 'components/avatar';
-import FloatingMenu from 'components/ui/floating-menu';
+import { AvatarVariants } from 'components/ui/avatar';
+import { Tooltip, ListCheckbox, RoundButton, FloatingMenu } from 'components/ui';
+import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
+import { sidebarActions } from 'shared/store/reducers/sidebar.slice';
 
 interface ChatListProps {
   name: string;
@@ -36,6 +35,8 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
 
   const [isOpen, setIsOpen] = useState(isOpenProp ?? false);
   const [isMenuHidden, setMenuHidden] = useState(true);
+  const dispatch = useAppDispatch();
+  const { setIsBlocked } = sidebarActions;
 
   const onOpenHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOpen(event.target.checked);
@@ -50,8 +51,9 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
     }
   };
 
-  const addButtonClickHandler = () => {
-    setMenuHidden(!isMenuHidden);
+  const menuHiddenHandler = (value: boolean) => {
+    setMenuHidden(value);
+    dispatch(setIsBlocked(value));
   };
 
   return (
@@ -62,9 +64,9 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
         </CheckboxContainer>
 
         <NameContainer>{name}</NameContainer>
-        <FloatingMenu element={menuElement} isHidden={isMenuHidden} setHidden={setMenuHidden} marginLeft="50px">
+        <FloatingMenu element={menuElement} isHidden={isMenuHidden} setHidden={menuHiddenHandler} marginLeft="50px">
           <Tooltip text={tooltipAddText || 'Добавить'}>
-            <RoundButton size="24px" padding="8px" onClick={addButtonClickHandler}>
+            <RoundButton size="24px" padding="8px" onClick={() => menuHiddenHandler(!isMenuHidden)}>
               <PlusSvg />
             </RoundButton>
           </Tooltip>

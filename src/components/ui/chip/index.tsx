@@ -1,13 +1,13 @@
-import Avatar from 'components/avatar';
-import CrossSvg from 'components/svg/cross-svg';
-import { FC } from 'react';
-import RoundButton from '../round-button';
+import { FC, MouseEvent } from 'react';
+
 import { ChipLabel, StyledChip } from './style';
+import { Avatar, RoundButton } from 'components/ui';
+import CrossSvg from 'components/svg/cross-svg';
 
 interface ChipProps {
   name?: string;
   imageSrc?: string;
-  onButtonClick?: (event?: any) => void;
+  onButtonClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
 
 // TODO: make passing one of the props necessary

@@ -1,35 +1,39 @@
-import { FC, memo, useLayoutEffect, useRef } from 'react';
+import { FC, memo, useEffect, useLayoutEffect, useRef } from 'react';
 
 import { Message } from 'core/entities/message.entity';
-import { MessageContainer, MessageDate } from './styled';
-import { getNativeDate, getNativeTime } from 'shared/utils/transform-date';
-import MessageListItem from '../message-list-item';
-import MessageListItemResponses from '../message-list-item-responses';
+import { Chat } from 'core/entities/chat.entity';
 import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { useAppTheme } from 'shared/hooks/use-app-theme.hook';
+import { getNativeDate, getNativeTime } from 'shared/utils/transform-date';
+import { MessageContainer, MessageDate } from './styled';
+import MessageListItem from '../message-list-item';
+import MessageListItemResponses from '../message-list-item-responses';
 
 interface MessageListProps {
   messages: Message[];
+  chat?: Chat;
 }
 
 const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
-  const { messages } = props;
+  const { messages, chat } = props;
 
   const dispatch = useAppDispatch();
   const [theme] = useAppTheme();
+
   const { messageId } = useAppSelector((state) => state.chatRoomReducer);
   const { setHighlightedMessage } = chatRoomActions;
 
   const highlightedMessageRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!highlightedMessageRef.current || !messageId) return;
 
     highlightedMessageRef.current.scrollIntoView();
     highlightedMessageRef.current.style.background = theme.button.hoverColor;
     highlightedMessageRef.current.style.transition = 'background 1s ease';
+
     window.setTimeout(() => {
       if (!highlightedMessageRef.current) return;
       highlightedMessageRef.current.style.background = '';
@@ -67,7 +71,7 @@ const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
               <MessageListItem
                 message={message}
                 onlyText={isStacked}
-                isManager={false}
+                isManager={message.user.id === chat?.creatorId}
                 ref={messageId === message.id ? highlightedMessageRef : null}
               />
               <MessageListItemResponses message={message} />

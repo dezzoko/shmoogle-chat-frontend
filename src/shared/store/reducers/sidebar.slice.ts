@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Chat } from 'core/entities/chat.entity';
-
 interface SidebarState {
   isOpened: boolean;
   isActive: boolean;
+  isBlocked: boolean;
   isChatsOpen: boolean;
   isGroupsOpen: boolean;
   isMeetsOpen: boolean;
@@ -13,6 +12,7 @@ interface SidebarState {
 const initialState: SidebarState = {
   isOpened: false,
   isActive: false,
+  isBlocked: false,
   isChatsOpen: false,
   isGroupsOpen: false,
   isMeetsOpen: false,
@@ -27,6 +27,9 @@ export const sidebarSlice = createSlice({
     },
     setIsActive(state, action: PayloadAction<boolean>) {
       state.isActive = action.payload;
+    },
+    setIsBlocked(state, action: PayloadAction<boolean>) {
+      state.isBlocked = action.payload;
     },
     setIsChatsOpen(state, action: PayloadAction<boolean>) {
       state.isChatsOpen = action.payload;

@@ -28,7 +28,9 @@ const MessageListItemResponses: FC<MessageListItemResponsesProps> = memo((props:
         <div>
           <ChatFilledSvg style={{ marginBottom: '-6px' }} />
         </div>
-        <label>{message.responses.length} ответа</label>
+        <label>
+          {message.responses.length} ответ{message.responses.length == 0 || message.responses.length >= 5 ? 'ов' : 'а'}
+        </label>
       </MessageResponsesCount>
       <MessageResponsesLastDate>{relative || readableDate}</MessageResponsesLastDate>
     </MessageResponsesContainer>

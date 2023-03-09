@@ -4,7 +4,7 @@ import { UserStatus } from 'core/entities/status.entity';
 import { Chat } from 'core/entities/chat.entity';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { StyledChatInfoButton } from './styled';
-import ListCheckbox from 'components/ui/list-checkbox';
+import { ListCheckbox } from 'components/ui';
 
 interface ChatInfoButtonProps {
   chat: Chat;

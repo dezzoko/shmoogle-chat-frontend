@@ -1,13 +1,8 @@
 import { FC } from 'react';
 
 import { Chat } from 'core/entities/chat.entity';
-import {
-  StyledChatSearchResult,
-  ChatSearchResultAvatarContainer,
-  ChatSearchResultInfo,
-  ChatSearchResultLogin,
-} from './styled';
-import Avatar, { AvatarVariants } from 'components/avatar';
+import { StyledChatSearchResult, ChatSearchResultAvatarContainer, ChatSearchResultInfo } from './styled';
+import Avatar, { AvatarVariants } from 'components/ui/avatar';
 
 interface ChatSearchResultProps {
   chat: Chat;

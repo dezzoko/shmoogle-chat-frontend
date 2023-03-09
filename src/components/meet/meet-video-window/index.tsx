@@ -1,7 +1,8 @@
-import Avatar from 'components/avatar';
-import { User } from 'core/entities/user.entity';
 import { FC, useEffect, useRef, VideoHTMLAttributes } from 'react';
+
+import { User } from 'core/entities/user.entity';
 import { MeetVideoDisabledVideoScreen, MeetVideoLabel, StyledMeetVideo } from './styled';
+import { Avatar } from 'components/ui';
 
 interface MeetVideoWindowOwnProps {
   src: MediaStream;
@@ -26,7 +27,6 @@ const MeetVideoWindow: FC<MeetVideoWindowProps> = (props: MeetVideoWindowProps) 
   useEffect(() => {
     if (video.current && src) {
       video.current.srcObject = src;
-
     }
   }, [src, video.current]);
 

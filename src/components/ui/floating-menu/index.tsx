@@ -11,9 +11,7 @@ interface FloatingMenuProps extends HTMLAttributes<HTMLDivElement> {
   marginLeft?: string;
 }
 
-// TODO: fix isHidden (click outside)
-
-const FloatingMenu: FC<FloatingMenuProps> = memo((props: FloatingMenuProps) => {
+const FloatingMenu: FC<FloatingMenuProps> = (props: FloatingMenuProps) => {
   const { children, element, isHidden, setHidden, ...other } = props;
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +42,7 @@ const FloatingMenu: FC<FloatingMenuProps> = memo((props: FloatingMenuProps) => {
       {children}
     </StyledFloatingMenu>
   );
-});
+};
 
 FloatingMenu.displayName = 'FloatingMenu';
 

@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 
-import { BodyContainer, FlexContainer } from './styled';
 import { useAppSelector } from 'shared/hooks/app-selector.hook';
+import { BodyContainer, FlexContainer } from './styled';
 import Header from './header';
 import Sidebar from './sidebar';
 

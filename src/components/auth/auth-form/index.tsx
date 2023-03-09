@@ -1,5 +1,7 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
+
 import { InputForm, Input, StyledSpanContainer, StyledSpan } from './styled';
+
 interface AuthFormProps {
   postUserHandler: (e: any) => void;
   login: string;
@@ -9,15 +11,9 @@ interface AuthFormProps {
   formId: string;
 }
 
-export const AuthForm: FC<PropsWithChildren<AuthFormProps>> = ({
-  postUserHandler,
-  login,
-  password,
-  loginChangeHandler,
-  passwordChangeHandler,
-  formId,
-  children
-}) => {
+export const AuthForm: FC<PropsWithChildren<AuthFormProps>> = (props: PropsWithChildren<AuthFormProps>) => {
+  const { postUserHandler, login, password, loginChangeHandler, passwordChangeHandler, formId, children } = props;
+
   return (
     <>
       <StyledSpan fontSize={16} fontWeight={400}>

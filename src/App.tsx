@@ -5,7 +5,7 @@ import Layout from './components/layout';
 import { useAppTheme } from 'shared/hooks/use-app-theme.hook';
 import { ThemeProvider } from 'styled-components';
 import { useChats } from 'shared/hooks/use-chats.hook';
-import ErrorNotifier from 'components/notifier';
+import ErrorNotifier from 'components/error-notifier';
 
 function App() {
   const [theme] = useAppTheme();

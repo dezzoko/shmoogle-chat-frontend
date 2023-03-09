@@ -1,12 +1,13 @@
-import Avatar from 'components/avatar';
-import { User } from 'core/entities/user.entity';
 import { FC } from 'react';
+
+import { User } from 'core/entities/user.entity';
 import {
   StyledUserSearchResult,
   UserSearchResultAvatarContainer,
   UserSearchResultInfo,
   UserSearchResultLogin,
 } from './styled';
+import { Avatar } from 'components/ui';
 
 interface UserSearchResultProps {
   user: User;
