@@ -1,4 +1,3 @@
-
 export interface IAuthService {
   login(login: string, password: string): Promise<LoginBackendData>;
   isLoggedIn(): boolean;
@@ -7,6 +6,6 @@ export interface IAuthService {
 
 export interface LoginBackendData {
   accessToken: string;
+  refreshToken: string;
   expiresIn: string;
 }
-

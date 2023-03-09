@@ -1,4 +1,5 @@
-import { JWT_ACCESS_TOKEN, JWT_EXPIRES_AT } from 'core/constants/tokens';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { JWT_ACCESS_TOKEN, JWT_EXPIRES_AT, JWT_REFRESH_TOKEN } from 'core/constants/tokens';
 import { IAuthService, LoginBackendData } from 'core/interfaces/auth-service.interface';
 import { ApiService } from './api.service';
 
@@ -12,22 +13,29 @@ export class AuthService implements IAuthService {
 
   async login(login: string, password: string): Promise<LoginBackendData> {
     const tokens = await this.api.post<LoginBackendData>('auth/login', { login, password });
-    const expirationDate = new Date();
-
-    expirationDate.setHours(expirationDate.getHours() + Number.parseInt(tokens.expiresIn));
-    localStorage.setItem(JWT_ACCESS_TOKEN, tokens.accessToken);
-    localStorage.setItem(JWT_EXPIRES_AT, expirationDate.toString());
+    this.setupTokens(tokens);
+    this.grantNewTokens();
     return tokens;
-    // try {
-    //   const tokens = await (await axios.post<LoginBackendData>(`${SERVER_URL}auth/login`, { login, password })).data;
-    //   const expirationDate = new Date();
-    //   expirationDate.setHours(expirationDate.getHours() + Number.parseInt(tokens.expiresIn));
-    //   localStorage.setItem(JWT_ACCESS_TOKEN, tokens.accessToken);
-    //   localStorage.setItem(JWT_EXPIRES_AT, expirationDate.toString());
-    //   return tokens;
-    // } catch (error) {
-    //   throw new Error('Cannot login', { cause: error });
-    // }
+  }
+
+  async grantNewTokens() {
+    if (this.refreshToken) {
+      this.api.axiosInstance.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+          if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
+
+          const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+            refreshToken: this.refreshToken,
+          });
+
+          this.setupTokens(tokens);
+          error.config.retry -= 1;
+
+          return axios(error.config);
+        },
+      );
+    }
   }
 
   isLoggedIn(): boolean {
@@ -48,6 +56,24 @@ export class AuthService implements IAuthService {
 
   logout(): void {
     localStorage.removeItem(JWT_ACCESS_TOKEN);
+    localStorage.removeItem(JWT_REFRESH_TOKEN);
     localStorage.removeItem(JWT_EXPIRES_AT);
+  }
+
+  private async setupTokens(data: LoginBackendData) {
+    const expirationDate = new Date();
+
+    expirationDate.setHours(expirationDate.getHours() + Number.parseInt(data.expiresIn));
+    localStorage.setItem(JWT_ACCESS_TOKEN, data.accessToken);
+    localStorage.setItem(JWT_EXPIRES_AT, expirationDate.toString());
+    localStorage.setItem(JWT_REFRESH_TOKEN, data.refreshToken);
+  }
+
+  private get accessToken() {
+    return localStorage.getItem(JWT_ACCESS_TOKEN);
+  }
+
+  private get refreshToken() {
+    return localStorage.getItem(JWT_REFRESH_TOKEN);
   }
 }

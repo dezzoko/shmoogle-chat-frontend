@@ -1,21 +1,41 @@
-import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
+import axios, { Axios, AxiosError, AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { SERVER_URL } from 'core/constants/api';
 import { JWT_ACCESS_TOKEN } from 'core/constants/tokens';
 import { ApiError } from 'shared/errors/api-error';
 
 export class ApiService {
   private apiUrl = SERVER_URL;
-
   private static instance: ApiService;
+  axiosInstance!: Axios;
 
   public static get Instance() {
     return this.instance || (this.instance = new this());
   }
 
+  constructor() {
+    this.axiosInstance = axios.create();
+    this.axiosInstance.interceptors.request.use(async (config) => {
+      if (this.accessToken) {
+        config.headers.set('Authorization', `Bearer ${this.accessToken}`);
+      }
+      return config;
+    });
+
+    this.axiosInstance.interceptors.response;
+
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        this.handleRequestError(error);
+        throw new Error('Unhandled error');
+      },
+    );
+  }
+
   async get<T>(path: string, headers?: AxiosHeaders): Promise<T> {
     const config = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     try {
-      const response = await axios.get<T>(`${this.apiUrl}${path}`, config);
+      const response = await this.axiosInstance.get<T>(`${this.apiUrl}${path}`, config);
       return response.data;
     } catch (error) {
       this.handleRequestError(error);
@@ -26,7 +46,7 @@ export class ApiService {
   async post<T>(path: string, body: any, headers?: AxiosHeaders): Promise<T> {
     const config = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     try {
-      const response = await axios.post<T>(`${this.apiUrl}${path}`, body, config);
+      const response = await this.axiosInstance.post<T>(`${this.apiUrl}${path}`, body, config);
       return response.data;
     } catch (error) {
       this.handleRequestError(error);
@@ -37,7 +57,7 @@ export class ApiService {
   async put<T>(path: string, body: any, headers?: AxiosHeaders): Promise<T> {
     const config = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     try {
-      const response = await axios.put<T>(`${this.apiUrl}${path}`, body, config);
+      const response = await this.axiosInstance.put<T>(`${this.apiUrl}${path}`, body, config);
       return response.data;
     } catch (error) {
       this.handleRequestError(error);
@@ -49,7 +69,7 @@ export class ApiService {
     const config: AxiosRequestConfig = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     config.headers = { ...config.headers, 'Content-Type': 'multipart/form-data' };
     try {
-      const response = await axios.post<T>(`${this.apiUrl}${path}`, formData, config);
+      const response = await this.axiosInstance.post<T>(`${this.apiUrl}${path}`, formData, config);
       return response.data;
     } catch (error) {
       this.handleRequestError(error);
@@ -61,7 +81,7 @@ export class ApiService {
     const config: AxiosRequestConfig = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     config.responseType = 'blob';
     try {
-      const response = await axios.get(`${this.apiUrl}${path}`, config);
+      const response = await this.axiosInstance.get(`${this.apiUrl}${path}`, config);
       return response.data;
     } catch (error) {
       this.handleRequestError(error);
