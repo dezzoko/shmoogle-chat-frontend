@@ -8,6 +8,7 @@ export enum ClientEvents {
   INVITED_TO_CHAT = 'INVITED_TO_CHAT',
   HISTORY_CHANGED = 'HISTORY_CHANGED',
   NEW_CHATS = 'NEW_CHATS',
+  NEW_CHAT = 'NEW_CHAT',
   ERROR = 'ERROR',
 }
 

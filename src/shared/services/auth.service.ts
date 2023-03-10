@@ -31,7 +31,6 @@ export class AuthService implements IAuthService {
 
           this.setupTokens(tokens);
           error.config.retry -= 1;
-
           return axios(error.config);
         },
       );

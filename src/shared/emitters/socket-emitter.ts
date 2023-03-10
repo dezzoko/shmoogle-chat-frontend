@@ -2,13 +2,14 @@ import io, { ManagerOptions, SocketOptions, Socket } from 'socket.io-client';
 
 import { Emitter } from './emitter';
 import { SERVER_SIGNALING_URL, SERVER_SOCKET_URL } from 'core/constants/api';
+import { JWT_ACCESS_TOKEN } from 'core/constants/tokens';
 
 export class SocketEmitter extends Emitter {
   clientSocket: Socket | null = null;
 
   constructor(connectionUrl: string, options?: Partial<ManagerOptions & SocketOptions>) {
     super();
-    this.clientSocket = io(connectionUrl);
+    this.clientSocket = io(connectionUrl, options);
   }
 
   public subscribe(event: string, callback: (...args: any) => void): this {
@@ -47,5 +48,13 @@ export class SocketEmitter extends Emitter {
   }
 }
 
-export const chatSocketEmitter = new SocketEmitter(SERVER_SOCKET_URL);
+export const chatSocketEmitter = new SocketEmitter(SERVER_SOCKET_URL, {
+  transportOptions: {
+    polling: {
+      extraHeaders: {
+        Authorization: `Bearer ${localStorage.getItem(JWT_ACCESS_TOKEN)}`,
+      },
+    },
+  },
+});
 export const signalSocketEmitter = new SocketEmitter(SERVER_SIGNALING_URL);

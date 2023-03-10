@@ -26,15 +26,26 @@ export function useChats() {
     dispatch(setUserChats([...newChats]));
   };
 
+  const newChatHandler = (backendChat: BackendChat) => {
+    const newChat: Chat = backendChatToEntityFactory(backendChat);
+    console.log('NEW_CHAT', newChat);
+    dispatch(setUserChats([...chats, newChat]));
+  };
+
   useEffect(() => {
     if (!chatSocketEmitter.isConnected()) {
       console.log('not connected!');
       return;
     }
-    chatSocketEmitter.subscribe(ClientEvents.NEW_CHATS, newChatsHandler);
+
+    chatSocketEmitter
+      .subscribe(ClientEvents.NEW_CHATS, newChatsHandler)
+      .subscribe(ClientEvents.NEW_CHAT, newChatHandler);
 
     return () => {
-      chatSocketEmitter.unsubscribe(ClientEvents.NEW_CHATS, newChatsHandler);
+      chatSocketEmitter
+        .unsubscribe(ClientEvents.NEW_CHATS, newChatsHandler)
+        .unsubscribe(ClientEvents.NEW_CHAT, newChatHandler);
     };
   }, [chatSocketEmitter.clientSocket]);
 
