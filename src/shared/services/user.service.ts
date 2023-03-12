@@ -19,4 +19,9 @@ export class UserService implements IUserService {
     const users = await this.api.get<BackendUser[]>('user/self/knownUsers');
     return users;
   }
+
+  async update(body: any) {
+    const user = await this.api.put('user/update', body);
+    return user;
+  }
 }
