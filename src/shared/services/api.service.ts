@@ -22,14 +22,6 @@ export class ApiService {
     });
 
     this.axiosInstance.interceptors.response;
-
-    this.axiosInstance.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        this.handleRequestError(error);
-        throw new Error('Unhandled error');
-      },
-    );
   }
 
   async get<T>(path: string, headers?: AxiosHeaders): Promise<T> {
