@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 export class AuthService implements IAuthService {
   private static instance: AuthService;
   api = ApiService.Instance;
+  refreshSetuped = false;
 
   public static get Instance() {
     return this.instance || (this.instance = new this());
@@ -14,11 +15,14 @@ export class AuthService implements IAuthService {
   async login(login: string, password: string): Promise<LoginBackendData> {
     const tokens = await this.api.post<LoginBackendData>('auth/login', { login, password });
     this.setupTokens(tokens);
-    this.grantNewTokens();
     return tokens;
   }
 
   async grantNewTokens() {
+    if (!this.refreshSetuped) {
+      this.refreshTokens();
+    }
+
     if (this.refreshToken) {
       this.api.axiosInstance.interceptors.response.use(
         (response) => response,
@@ -31,9 +35,20 @@ export class AuthService implements IAuthService {
 
           this.setupTokens(tokens);
           error.config.retry -= 1;
-          return axios(error.config);
+          return this.api.axiosInstance.request(error.config);
         },
       );
+      this.refreshSetuped = true;
+    }
+  }
+
+  async refreshTokens() {
+    if (this.refreshToken) {
+      const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+        refreshToken: this.refreshToken,
+      });
+      console.log('tokens from grant', tokens);
+      this.setupTokens(tokens);
     }
   }
 
@@ -73,6 +88,7 @@ export class AuthService implements IAuthService {
   }
 
   private get refreshToken() {
-    return localStorage.getItem(JWT_REFRESH_TOKEN);
+    const token = localStorage.getItem(JWT_REFRESH_TOKEN);
+    return token === 'undefined' ? '' : token;
   }
 }

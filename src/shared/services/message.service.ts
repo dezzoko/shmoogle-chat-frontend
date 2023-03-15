@@ -31,56 +31,16 @@ export class MessageService implements IMessageService {
   async uploadFiles(formData: FormData) {
     const files = await this.api.uploadFiles<BackendFile[]>('message/addFiles', formData);
     return files;
-
-    // try {
-    //   const config: AxiosRequestConfig = {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //       'Authorization': `Bearer ${localStorage.getItem(JWT_ACCESS_TOKEN)}`,
-    //     },
-    //   };
-    //   const response = await axios.post(`${SERVER_URL}message/addFiles`, formData, config);
-
-    //   return response.data as BackendFile[];
-    // } catch (error) {
-    //   throw new Error('Cannot load files');
-    // }
   }
 
   async getFile(fileId: string) {
     const response = await this.api.getFile(`message/files/${fileId}`);
     return response;
-    // const config: AxiosRequestConfig = {
-    //   responseType: 'blob',
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem(JWT_ACCESS_TOKEN)}`,
-    //   },
-    // };
-    // try {
-    //   const response = await axios.get(`${SERVER_URL}message/files/${fileId}`, config);
-
-    //   return response.data;
-    // } catch (error) {
-    //   throw new Error('Cannot get file', { cause: error });
-    // }
   }
 
   //TODO: responses
   async getByChatId(chatId: string) {
     const messages = await this.api.get<BackendMessage[]>(`chat/${chatId}/messages`);
     return messages.map((m) => backendMessageToEntityFactory(m));
-
-    // try {
-    //   const token = localStorage.getItem(JWT_ACCESS_TOKEN);
-    //   const config = { headers: { Authorization: `Bearer ${token}` } };
-
-    //   const messages = (await (
-    //     await axios.get(`${SERVER_URL}chat/${chatId}/messages`, config)
-    //   ).data) as BackendMessage[];
-    //   //TODO: responses
-    //   return messages.map((m) => ({ ...m, creationDate: m.createdAt.toString(), responses: [], user: m.creatorId }));
-    // } catch (error) {
-    //   throw new Error('Cannot get chat messages', { cause: error });
-    // }
   }
 }

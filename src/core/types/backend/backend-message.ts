@@ -5,8 +5,8 @@ export interface BackendMessage {
   text: string;
   chatId: string;
   creatorId: BackendUser;
-  isResponseToId: string;
   createdAt: Date;
   hasModified: boolean;
+  isResponseToId?: string;
   responses?: BackendMessage[];
 }
