@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { AuthService } from 'shared/services/auth.service';
 
 const AuthRequire: FC<PropsWithChildren> = ({ children }) => {
+  AuthService.Instance.grantNewTokens();
   if (!AuthService.Instance.isLoggedIn()) {
     return <Navigate to={routes.auth} />;
   }

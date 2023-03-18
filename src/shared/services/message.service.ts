@@ -29,7 +29,7 @@ export class MessageService implements IMessageService {
   }
 
   async uploadFiles(formData: FormData) {
-    const files = await this.api.uploadFiles<BackendFile[]>('message/addFiles', formData);
+    const files = await this.api.uploadFiles<BackendFile[]>('message/addFiles', formData, 'post');
     return files;
 
     // try {

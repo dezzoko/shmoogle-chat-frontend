@@ -1,4 +1,3 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
 import { JWT_ACCESS_TOKEN, JWT_EXPIRES_AT, JWT_REFRESH_TOKEN } from 'core/constants/tokens';
 import { IAuthService, LoginBackendData } from 'core/interfaces/auth-service.interface';
 import { ApiService } from './api.service';
@@ -14,27 +13,22 @@ export class AuthService implements IAuthService {
   async login(login: string, password: string): Promise<LoginBackendData> {
     const tokens = await this.api.post<LoginBackendData>('auth/login', { login, password });
     this.setupTokens(tokens);
-    this.grantNewTokens();
     return tokens;
   }
 
   async grantNewTokens() {
-    if (this.refreshToken) {
-      this.api.axiosInstance.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-          if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
-
-          const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
-            refreshToken: this.refreshToken,
-          });
-
-          this.setupTokens(tokens);
-          error.config.retry -= 1;
-          return axios(error.config);
-        },
-      );
-    }
+    this.api.axiosInstance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
+        const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+          refreshToken: this.refreshToken,
+        });
+        this.setupTokens(tokens);
+        error.config.retry -= 1;
+        return this.api.axiosInstance.request(error.config);
+      },
+    );
   }
 
   isLoggedIn(): boolean {
@@ -46,7 +40,7 @@ export class AuthService implements IAuthService {
 
     const expirationDate = new Date(expirationDateString);
 
-    if (expirationDate < new Date()) {
+    if (expirationDate < new Date() && !this.refreshToken) {
       return false;
     }
 
@@ -55,7 +49,7 @@ export class AuthService implements IAuthService {
 
   logout(): void {
     localStorage.removeItem(JWT_ACCESS_TOKEN);
-    localStorage.removeItem(JWT_REFRESH_TOKEN);
+    // localStorage.removeItem(JWT_REFRESH_TOKEN);
     localStorage.removeItem(JWT_EXPIRES_AT);
   }
 

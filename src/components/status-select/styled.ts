@@ -10,6 +10,10 @@ export const StyledStatusSelect = styled.div`
   margin-bottom: 4px;
   margin-right: 12px;
   padding: 0 16px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.button.hoverColor};
+  }
 `;
 
 export const StatusSelectButton = styled.div`

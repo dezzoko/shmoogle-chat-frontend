@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError, AxiosHeaders, AxiosRequestConfig } from 'axios';
+import axios, { Axios, AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { SERVER_URL } from 'core/constants/api';
 import { JWT_ACCESS_TOKEN } from 'core/constants/tokens';
 import { ApiError } from 'shared/errors/api-error';
@@ -22,14 +22,6 @@ export class ApiService {
     });
 
     this.axiosInstance.interceptors.response;
-
-    this.axiosInstance.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        this.handleRequestError(error);
-        throw new Error('Unhandled error');
-      },
-    );
   }
 
   async get<T>(path: string, headers?: AxiosHeaders): Promise<T> {
@@ -65,12 +57,23 @@ export class ApiService {
     }
   }
 
-  async uploadFiles<T>(path: string, formData: FormData, headers?: AxiosHeaders): Promise<T> {
+  async uploadFiles<T>(path: string, formData: FormData, method: string, headers?: AxiosHeaders): Promise<T> {
     const config: AxiosRequestConfig = headers ? this.applyHeadersConfig(headers) : this.baseConfig;
     config.headers = { ...config.headers, 'Content-Type': 'multipart/form-data' };
     try {
-      const response = await this.axiosInstance.post<T>(`${this.apiUrl}${path}`, formData, config);
-      return response.data;
+      switch (method) {
+        case 'post': {
+          const response = await this.axiosInstance.post<T>(`${this.apiUrl}${path}`, formData, config);
+          return response.data;
+        }
+
+        case 'put': {
+          const response = await this.axiosInstance.put<T>(`${this.apiUrl}${path}`, formData, config);
+          return response.data;
+        }
+        default:
+          throw new Error('No such method to request');
+      }
     } catch (error) {
       this.handleRequestError(error);
       throw new Error('Unhandled error');

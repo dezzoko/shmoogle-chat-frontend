@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 
 import RoundedPlusSvg from 'components/svg/rounded-plus-svg';
 import { RoundButton } from 'components/ui';
@@ -9,9 +9,14 @@ interface ChatFeaturesChoiceProps {
 
 const ChatFeaturesChoice: FC<ChatFeaturesChoiceProps> = (props: ChatFeaturesChoiceProps) => {
   const { setFile } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const chatFeatureChoice = (event: any) => {
     setFile(event.target.files);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      inputRef.current.files = null;
+    }
   };
   return (
     //TODO: refactor component
@@ -23,6 +28,7 @@ const ChatFeaturesChoice: FC<ChatFeaturesChoiceProps> = (props: ChatFeaturesChoi
           display: 'none',
         }}
         onChange={chatFeatureChoice}
+        ref={inputRef}
       />
 
       <label htmlFor="upload-file">
