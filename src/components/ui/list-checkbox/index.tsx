@@ -12,7 +12,6 @@ interface ListCheckboxProps {
 const ListCheckbox: FC<ListCheckboxProps> = memo((props: ListCheckboxProps) => {
   const { onChecked, initialValue, ...other } = props;
   const id = useId();
-
   return (
     <>
       <StyledListCheckbox id={id} name={id} onChange={onChecked} checked={initialValue} {...other} />

@@ -7,7 +7,7 @@ export const StyledModal = styled.div<StyledModalProps>`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: #000000eb;
+  background-color: rgba(32, 33, 36, 0.6);
   z-index: 998;
 `;
 

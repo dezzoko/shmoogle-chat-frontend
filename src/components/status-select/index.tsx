@@ -33,8 +33,12 @@ function renderSwitch(statusId: UserStatus) {
       );
   }
 }
-
-const StatusSelect: FC = memo(() => {
+interface StatusSelectProps {
+  onClick: (e: any) => any;
+  isOpen: boolean;
+}
+const StatusSelect: FC<StatusSelectProps> = memo((props: StatusSelectProps) => {
+  const { onClick, isOpen } = props;
   const { user } = useAppSelector((state) => state.userReducer);
 
   if (!user) {
@@ -45,7 +49,7 @@ const StatusSelect: FC = memo(() => {
     <StyledStatusSelect>
       {renderSwitch(user.statusId)}
       <StatusSelectButton>
-        <ListCheckbox initialValue={true} />
+        <ListCheckbox onChecked={onClick} initialValue={isOpen} />
       </StatusSelectButton>
     </StyledStatusSelect>
   );

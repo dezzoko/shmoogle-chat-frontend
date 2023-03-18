@@ -24,4 +24,9 @@ export class UserService implements IUserService {
     const user = await this.api.put('user/update', body);
     return user;
   }
+
+  async updateAvatar(formData: FormData) {
+    const user = await this.api.uploadFiles('user/update', formData, 'put');
+    return user;
+  }
 }

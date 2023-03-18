@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, TextareaHTMLAttributes } from 'react';
 import { StyledTextArea, StyledTextAreaProps } from './styled';
-interface TextAreaProps {
+export interface TextAreaOwnProps {
   fontSize?: string;
   fontWeight?: string;
   color?: string;
@@ -8,6 +8,7 @@ interface TextAreaProps {
   padding?: string;
   margin?: string;
 }
+type TextAreaProps = TextAreaOwnProps & Omit<TextAreaOwnProps, keyof TextareaHTMLAttributes<any>>;
 
 const TextArea: FC<PropsWithChildren<TextAreaProps>> = ({ children, ...props }) => {
   return <StyledTextArea {...props}>{children}</StyledTextArea>;

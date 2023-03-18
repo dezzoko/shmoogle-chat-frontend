@@ -1,4 +1,3 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
 import { JWT_ACCESS_TOKEN, JWT_EXPIRES_AT, JWT_REFRESH_TOKEN } from 'core/constants/tokens';
 import { IAuthService, LoginBackendData } from 'core/interfaces/auth-service.interface';
 import { ApiService } from './api.service';
@@ -41,7 +40,7 @@ export class AuthService implements IAuthService {
 
     const expirationDate = new Date(expirationDateString);
 
-    if (expirationDate < new Date()) {
+    if (expirationDate < new Date() && !this.refreshToken) {
       return false;
     }
 

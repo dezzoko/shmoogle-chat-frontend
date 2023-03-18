@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, ForwardedRef, forwardRef, memo, useRef } from 'react';
 
 import { AvatarLabel, AvatarWrapper } from './styled';
 
@@ -8,6 +8,11 @@ interface AvatarProps {
   background?: string;
   size?: string;
   variant?: AvatarVariants;
+  onClick?: () => any;
+  onDrop?: (e: any) => any;
+  onDragEnter?: (e: any) => any;
+  onDragOver?: (e: any) => any;
+  ref?: ForwardedRef<HTMLDivElement>;
 }
 
 export enum AvatarVariants {
@@ -15,8 +20,18 @@ export enum AvatarVariants {
   square = '5px',
 }
 
-const Avatar: FC<AvatarProps> = memo((props: AvatarProps) => {
-  const { label, src, background, size, variant = AvatarVariants.round } = props;
+const Avatar: FC<AvatarProps> = forwardRef<HTMLDivElement, AvatarProps>((props: AvatarProps, ref) => {
+  const {
+    label,
+    src,
+    background,
+    size,
+    variant = AvatarVariants.round,
+    onClick,
+    onDragEnter,
+    onDragOver,
+    onDrop,
+  } = props;
   let fontSize = '';
   let lineHeight = '';
   if (size) {
@@ -25,9 +40,18 @@ const Avatar: FC<AvatarProps> = memo((props: AvatarProps) => {
   }
 
   return (
-    <AvatarWrapper size={size} background={background} borderRadius={variant}>
+    <AvatarWrapper
+      ref={ref}
+      onDrop={onDrop}
+      onDragStart={onDragEnter}
+      onDragOver={onDragOver}
+      size={size}
+      background={background}
+      borderRadius={variant}
+      onClick={onClick}
+    >
       {src ? (
-        <img src={src} />
+        <img key={src} src={src} />
       ) : (
         <AvatarLabel fontSize={fontSize} lineHeight={lineHeight}>
           {label}
@@ -36,7 +60,6 @@ const Avatar: FC<AvatarProps> = memo((props: AvatarProps) => {
     </AvatarWrapper>
   );
 });
-
 Avatar.displayName = 'Avatar';
 
-export default Avatar;
+export default memo(Avatar);

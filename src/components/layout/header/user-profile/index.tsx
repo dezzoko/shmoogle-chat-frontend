@@ -1,5 +1,6 @@
 import { Avatar, Button, Modal } from 'components/ui';
 import TextArea from 'components/ui/textArea';
+import { SERVER_AVATARS_URL } from 'core/constants/api';
 import { routes } from 'core/constants/routes';
 import { User } from 'core/entities/user.entity';
 import { FC, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -10,6 +11,7 @@ import { UserService } from 'shared/services/user.service';
 import { userActions } from 'shared/store/reducers/user.slice';
 import OptionsContainer from '../options/options-container';
 import { OptionsBody } from '../options/styled';
+import ModalChangeAvatar from './modal-change-avatar';
 import ModalQuitMessage from './modal-quit-message';
 import { StyledInfoContainer, StyledInput, StyledUserContainer, UserCredits } from './styled';
 
@@ -25,6 +27,7 @@ const UserProfile: FC<UserProfileProps> = memo((props: UserProfileProps) => {
   const [usernameTheSameValid, setUsernameTheSameValid] = useState(true);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [isChangeAvatarModalHidden, setChangeAvatarModalHidden] = useState(true);
   const { setLoggedUser } = userActions;
   const [userName, setUserName] = useState(user?.username);
   const [isQuitModalHidden, setQuitModalHidden] = useState(true);
@@ -59,6 +62,10 @@ const UserProfile: FC<UserProfileProps> = memo((props: UserProfileProps) => {
     AuthService.Instance.logout();
     navigate(routes.auth);
   };
+
+  const changeAvatarModalHandler = () => {
+    setChangeAvatarModalHidden(!isChangeAvatarModalHidden);
+  };
   useLayoutEffect(() => {
     if (userName && userName?.length <= 3) {
       setUsernameLenghtValid(false);
@@ -82,9 +89,19 @@ const UserProfile: FC<UserProfileProps> = memo((props: UserProfileProps) => {
         isQuitModalHidden={isQuitModalHidden}
         setQuitModalHidden={setQuitModalHidden}
       />
+      <ModalChangeAvatar
+        isChangeAvatarModalHidden={isChangeAvatarModalHidden}
+        setChangeAvatarModalHidden={changeAvatarModalHandler}
+        user={user}
+      />
       <StyledUserContainer>
         <StyledInfoContainer>
-          <Avatar size="60px" src={user?.avatarUrl} label={user?.username[0] || 'U'}></Avatar>
+          <Avatar
+            size="60px"
+            src={SERVER_AVATARS_URL + user?.avatarUrl}
+            label={user?.username[0] || 'U'}
+            onClick={changeAvatarModalHandler}
+          ></Avatar>
           <UserCredits>
             {isEditable ? (
               <>

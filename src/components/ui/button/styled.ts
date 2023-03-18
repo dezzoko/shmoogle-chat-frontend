@@ -5,6 +5,7 @@ export const StyledButton = styled.div<StyledButtonProps>`
   align-items: center;
   gap: ${(props) => props.gap || '5px'};
   padding: 5px;
+  height: fit-content;
   border: 1px solid ${(props) => (props.outlined ? props.theme.button.outlineColor : 'transparent')};
   transition: background 0.1s ease;
   &:hover {

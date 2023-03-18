@@ -1,13 +1,7 @@
 import styled from 'styled-components';
-export interface StyledTextAreaProps {
-  fontSize?: string;
-  fontWeight?: string;
-  color?: string;
-  padding?: string;
-  margin?: string;
-  textAlign?: string;
-  input?: boolean;
-}
+import { TextAreaOwnProps } from '.';
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface StyledTextAreaProps extends TextAreaOwnProps {}
 
 export const StyledTextArea = styled.div<StyledTextAreaProps>`
   font-size: ${(props) => props.fontSize || '14px'};

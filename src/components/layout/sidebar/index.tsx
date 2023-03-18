@@ -43,7 +43,7 @@ const Sidebar: FC = memo(() => {
   };
 
   const mouseLeaveHandler = () => {
-    if (!isActive && isBlocked) {
+    if (!isActive && !isBlocked) {
       dispatch(setIsOpened(false));
     }
   };
