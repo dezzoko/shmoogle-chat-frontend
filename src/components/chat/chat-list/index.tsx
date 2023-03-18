@@ -53,7 +53,7 @@ const ChatList: FC<ChatListProps> = memo((props: ChatListProps) => {
 
   const menuHiddenHandler = (value: boolean) => {
     setMenuHidden(value);
-    dispatch(setIsBlocked(value));
+    dispatch(setIsBlocked(!value));
   };
 
   return (
