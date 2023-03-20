@@ -12,3 +12,10 @@ export const MessageDate = styled.div`
   font-weight: 600;
   text-transform: uppercase;
 `;
+
+export const MessageListItemContainer = styled.div`
+  &:hover {
+    background: ${({ theme }) => theme.hoverColor};
+  }
+  margin: 5px 0;
+`;

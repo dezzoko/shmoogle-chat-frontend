@@ -13,6 +13,7 @@ import SearchSvg from 'components/svg/search-svg';
 import ChatInfoButton from '../chat-info-button';
 import ChatOptionsMenu from '../chat-options-menu';
 import { Tooltip, RoundButton, FloatingMenu } from 'components/ui';
+import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 
 interface ChatHeaderProps {
   chat: Chat;
@@ -25,6 +26,9 @@ const ChatHeader: FC<ChatHeaderProps> = memo((props: ChatHeaderProps) => {
 
   const [isMenuHidden, setMenuHidden] = useState(true);
   const { user } = useAppSelector((state) => state.userReducer);
+  const { isChatChainsOpened } = useAppSelector((state) => state.chatRoomReducer);
+  const { setChatChainsOpened } = chatRoomActions;
+
   const dispatch = useAppDispatch();
 
   if (!user) {
@@ -73,7 +77,7 @@ const ChatHeader: FC<ChatHeaderProps> = memo((props: ChatHeaderProps) => {
           </Tooltip>
           {chat.isGroup ? (
             <Tooltip text="Активные цепочки">
-              <RoundButton size="24px" padding="8px">
+              <RoundButton size="24px" padding="8px" onClick={() => dispatch(setChatChainsOpened(!isChatChainsOpened))}>
                 <ChatFilledSvg size={24} />
               </RoundButton>
             </Tooltip>

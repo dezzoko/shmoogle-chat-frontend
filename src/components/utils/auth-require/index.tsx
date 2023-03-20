@@ -5,23 +5,31 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthService } from 'shared/services/auth.service';
 import { Spinner } from 'components/ui';
 
+async function refreshTokens() {
+  return AuthService.Instance.refreshTokens();
+}
+
 const AuthRequire: FC<PropsWithChildren> = ({ children }) => {
   const [isRefreshTried, setRefreshTried] = useState(false);
 
   const navigate = useNavigate();
 
-  if (isRefreshTried && !AuthService.Instance.isLoggedIn()) {
-    return <Navigate to={routes.auth} />;
-  }
+  // if (isRefreshTried && !AuthService.Instance.isLoggedIn()) {
+  //   return <Navigate to={routes.auth} />;
+  // }
 
   useEffect(() => {
-    AuthService.Instance.grantNewTokens()
-      .then(() => {
-        setRefreshTried(true);
-      })
-      .catch(() => {
-        navigate(routes.auth);
-      });
+    if (!AuthService.Instance.isLoggedIn()) {
+      refreshTokens()
+        .then(() => {
+          setRefreshTried(true);
+        })
+        .catch((error) => {
+          navigate(routes.auth);
+        });
+    } else {
+      setRefreshTried(true);
+    }
   }, []);
 
   return <>{isRefreshTried ? <>{children}</> : <Spinner />} </>;

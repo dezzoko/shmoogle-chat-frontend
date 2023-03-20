@@ -8,11 +8,15 @@ export enum ChatPageOption {
 interface ChatRoomState {
   currentOption: ChatPageOption;
   messageId: string | null;
+  responseToId: string | null;
+  isChatChainsOpened: boolean;
 }
 
 const initialState: ChatRoomState = {
   currentOption: ChatPageOption.chat,
   messageId: null,
+  responseToId: null,
+  isChatChainsOpened: false,
 };
 
 export const chatRoomSlice = createSlice({
@@ -24,6 +28,13 @@ export const chatRoomSlice = createSlice({
     },
     setCurrentOption(state, action: PayloadAction<ChatPageOption>) {
       state.currentOption = action.payload;
+    },
+    setResponseToId(state, action: PayloadAction<string | null>) {
+      state.responseToId = action.payload;
+    },
+
+    setChatChainsOpened(state, action: PayloadAction<boolean>) {
+      state.isChatChainsOpened = action.payload;
     },
   },
 });

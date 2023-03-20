@@ -12,10 +12,14 @@ import {
   StyledChatPage,
   ChatPageBodyOptions,
   ChatPageBodyContent,
+  ChatChainsListContainer,
+  ChatPageContainer,
 } from './styled';
 import ChatFiles from 'components/chat/chat-files';
 import { ChatPageOption, chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
+import ChatChainsList from 'components/chat/chat-chains-list';
+import ChatChain from 'components/chat/chat-chain';
 
 function renderSwitch(option: ChatPageOption, chatId: string) {
   switch (option) {
@@ -37,6 +41,7 @@ export const ChatPage: FC = () => {
 
   const { chats } = useAppSelector((state) => state.userReducer);
   const { messageId, currentOption } = useAppSelector((state) => state.chatRoomReducer);
+  const { isChatChainsOpened, responseToId } = useAppSelector((state) => state.chatRoomReducer);
   const { setCurrentOption } = chatRoomActions;
 
   const onOptionChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,40 +71,52 @@ export const ChatPage: FC = () => {
   }, [messageId]);
 
   return (
-    <StyledChatPage>
-      <ChatHeader chat={chat} />
-      <ChatPageBody>
-        <ChatPageBodyOptions>
-          <ChatPageFlexContainer>
-            <OptionRadio
-              name={radioName}
-              value={ChatPageOption.chat}
-              checked={currentOption === ChatPageOption.chat}
-              onChange={onOptionChangeHandler}
-            >
-              Чат
-            </OptionRadio>
-            <OptionRadio
-              name={radioName}
-              value={ChatPageOption.files}
-              checked={currentOption === ChatPageOption.files}
-              onChange={onOptionChangeHandler}
-            >
-              Файлы
-            </OptionRadio>
-            <OptionRadio
-              name={radioName}
-              value={ChatPageOption.tasks}
-              checked={currentOption === ChatPageOption.tasks}
-              onChange={onOptionChangeHandler}
-            >
-              Задачи
-            </OptionRadio>
-          </ChatPageFlexContainer>
-        </ChatPageBodyOptions>
+    <ChatPageContainer>
+      <StyledChatPage>
+        <ChatHeader chat={chat} />
+        <ChatPageBody>
+          <ChatPageBodyOptions>
+            <ChatPageFlexContainer>
+              <OptionRadio
+                name={radioName}
+                value={ChatPageOption.chat}
+                checked={currentOption === ChatPageOption.chat}
+                onChange={onOptionChangeHandler}
+              >
+                Чат
+              </OptionRadio>
+              <OptionRadio
+                name={radioName}
+                value={ChatPageOption.files}
+                checked={currentOption === ChatPageOption.files}
+                onChange={onOptionChangeHandler}
+              >
+                Файлы
+              </OptionRadio>
+              <OptionRadio
+                name={radioName}
+                value={ChatPageOption.tasks}
+                checked={currentOption === ChatPageOption.tasks}
+                onChange={onOptionChangeHandler}
+              >
+                Задачи
+              </OptionRadio>
+            </ChatPageFlexContainer>
+          </ChatPageBodyOptions>
 
-        <ChatPageBodyContent>{renderSwitch(currentOption, chat.id)}</ChatPageBodyContent>
-      </ChatPageBody>
-    </StyledChatPage>
+          <ChatPageBodyContent>{renderSwitch(currentOption, chat.id)}</ChatPageBodyContent>
+        </ChatPageBody>
+      </StyledChatPage>
+      {isChatChainsOpened && !responseToId && (
+        <ChatChainsListContainer>
+          <ChatChainsList chatId={id} />
+        </ChatChainsListContainer>
+      )}
+      {isChatChainsOpened && responseToId && (
+        <ChatChainsListContainer>
+          <ChatChain chatId={chat.id} messageId={responseToId} />
+        </ChatChainsListContainer>
+      )}
+    </ChatPageContainer>
   );
 };

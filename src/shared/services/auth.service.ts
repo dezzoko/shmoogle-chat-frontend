@@ -6,10 +6,26 @@ import { ApiService } from './api.service';
 export class AuthService implements IAuthService {
   private static instance: AuthService;
   api = ApiService.Instance;
-  refreshSetuped = false;
 
   public static get Instance() {
     return this.instance || (this.instance = new this());
+  }
+
+  constructor() {
+    this.api.axiosInstance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
+
+        const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+          refreshToken: this.refreshToken,
+        });
+
+        this.setupTokens(tokens);
+        error.config.retry -= 1;
+        return this.api.axiosInstance.request(error.config);
+      },
+    );
   }
 
   async login(login: string, password: string): Promise<LoginBackendData> {
@@ -18,37 +34,13 @@ export class AuthService implements IAuthService {
     return tokens;
   }
 
-  async grantNewTokens() {
-    if (!this.refreshSetuped) {
-      this.refreshTokens();
-    }
-
-    if (this.refreshToken) {
-      this.api.axiosInstance.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-          if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
-
-          const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
-            refreshToken: this.refreshToken,
-          });
-
-          this.setupTokens(tokens);
-          error.config.retry -= 1;
-          return this.api.axiosInstance.request(error.config);
-        },
-      );
-      this.refreshSetuped = true;
-    }
-  }
-
   async refreshTokens() {
     if (this.refreshToken) {
       const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
         refreshToken: this.refreshToken,
       });
-      console.log('tokens from grant', tokens);
       this.setupTokens(tokens);
+      return tokens;
     }
   }
 
