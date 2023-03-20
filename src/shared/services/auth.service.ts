@@ -10,11 +10,29 @@ export class AuthService implements IAuthService {
     return this.instance || (this.instance = new this());
   }
 
+  constructor() {
+    this.api.axiosInstance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error?.response?.status !== 401 || !this.refreshToken) return Promise.reject(error);
+
+        const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+          refreshToken: this.refreshToken,
+        });
+
+        this.setupTokens(tokens);
+        error.config.retry -= 1;
+        return this.api.axiosInstance.request(error.config);
+      },
+    );
+  }
+
   async login(login: string, password: string): Promise<LoginBackendData> {
     const tokens = await this.api.post<LoginBackendData>('auth/login', { login, password });
     this.setupTokens(tokens);
     return tokens;
   }
+
 
   async grantNewTokens() {
     this.api.axiosInstance.interceptors.response.use(
@@ -29,6 +47,16 @@ export class AuthService implements IAuthService {
         return this.api.axiosInstance.request(error.config);
       },
     );
+
+  async refreshTokens() {
+    if (this.refreshToken) {
+      const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
+        refreshToken: this.refreshToken,
+      });
+      this.setupTokens(tokens);
+      return tokens;
+    }
+
   }
 
   isLoggedIn(): boolean {
@@ -67,6 +95,7 @@ export class AuthService implements IAuthService {
   }
 
   private get refreshToken() {
-    return localStorage.getItem(JWT_REFRESH_TOKEN);
+    const token = localStorage.getItem(JWT_REFRESH_TOKEN);
+    return token === 'undefined' ? '' : token;
   }
 }

@@ -1,10 +1,21 @@
 import styled from 'styled-components';
 
 export const StyledChatPage = styled.div`
-  width: 100%;
+  flex: 3;
   height: 100%;
   display: flex;
   flex-direction: column;
+`;
+
+export const ChatChainsListContainer = styled.div`
+  flex: 2;
+  height: 100%;
+`;
+
+export const ChatPageContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
 `;
 
 export const ChatPageBody = styled.div`

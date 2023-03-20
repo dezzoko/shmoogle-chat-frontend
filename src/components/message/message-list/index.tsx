@@ -7,9 +7,10 @@ import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { useAppTheme } from 'shared/hooks/use-app-theme.hook';
 import { getNativeDate, getNativeTime } from 'shared/utils/transform-date';
-import { MessageContainer, MessageDate } from './styled';
+import { MessageContainer, MessageDate, MessageListItemContainer } from './styled';
 import MessageListItem from '../message-list-item';
 import MessageListItemResponses from '../message-list-item-responses';
+import MessageActions from '../message-actions';
 
 interface MessageListProps {
   messages: Message[];
@@ -68,12 +69,16 @@ const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
           return (
             <div key={message.id}>
               {showDate ? <MessageDate>{date}</MessageDate> : <></>}
-              <MessageListItem
-                message={message}
-                onlyText={isStacked}
-                isManager={message.user.id === chat?.creatorId}
-                ref={messageId === message.id ? highlightedMessageRef : null}
-              />
+              <MessageListItemContainer>
+                <MessageActions message={message}>
+                  <MessageListItem
+                    message={message}
+                    onlyText={isStacked}
+                    isManager={message.user.id === chat?.creatorId}
+                    ref={messageId === message.id ? highlightedMessageRef : null}
+                  />
+                </MessageActions>
+              </MessageListItemContainer>
               <MessageListItemResponses message={message} />
             </div>
           );

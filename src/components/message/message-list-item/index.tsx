@@ -18,7 +18,7 @@ interface MessageListItemProps {
   message: Message;
   isManager?: boolean;
   onlyText?: boolean;
-  ref: ForwardedRef<HTMLDivElement>;
+  ref?: ForwardedRef<HTMLDivElement>;
 }
 
 const MessageListItem: FC<MessageListItemProps> = forwardRef<HTMLDivElement, MessageListItemProps>(

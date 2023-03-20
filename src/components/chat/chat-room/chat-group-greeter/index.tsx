@@ -18,10 +18,9 @@ interface ChatGroupGreeterProps {
 }
 
 const ChatGroupGreeter: FC<ChatGroupGreeterProps> = memo((props: ChatGroupGreeterProps) => {
-  const { user } = useAppSelector((state) => state.userReducer);
-
+  const { user, isUserLoading } = useAppSelector((state) => state.userReducer);
   if (!user) {
-    return <Navigate to={routes.welcome} />;
+    return null;
   }
 
   const { chat } = props;

@@ -14,6 +14,7 @@ export const ChatRoomViewBox = styled.div`
   justify-content: center;
   position: relative;
   overflow-y: scroll;
+  overflow-x: hidden;
   flex: 1;
   padding: 0 5%;
 `;

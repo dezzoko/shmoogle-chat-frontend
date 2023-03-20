@@ -18,6 +18,7 @@ const ChatFeaturesChoice: FC<ChatFeaturesChoiceProps> = (props: ChatFeaturesChoi
       inputRef.current.files = null;
     }
   };
+
   return (
     //TODO: refactor component
     <>

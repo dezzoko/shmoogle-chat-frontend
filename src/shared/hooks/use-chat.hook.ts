@@ -71,7 +71,9 @@ export function useChat(chatId: string) {
         setMessages(fetchedMessages);
         setMessagesLoading(false);
       })
-      .catch((error) => setMessagesError(error));
+      .catch((error) => {
+        setMessagesError(error);
+      });
   }, [chatId]);
 
   return { chat, messages, sendMessage, isMessagesLoading, isMessagesError };
