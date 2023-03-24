@@ -33,7 +33,6 @@ export class AuthService implements IAuthService {
     return tokens;
   }
 
-
   async grantNewTokens() {
     this.api.axiosInstance.interceptors.response.use(
       (response) => response,
@@ -47,7 +46,7 @@ export class AuthService implements IAuthService {
         return this.api.axiosInstance.request(error.config);
       },
     );
-
+  }
   async refreshTokens() {
     if (this.refreshToken) {
       const tokens = await this.api.post<LoginBackendData>('auth/grantNewTokens', {
@@ -56,7 +55,6 @@ export class AuthService implements IAuthService {
       this.setupTokens(tokens);
       return tokens;
     }
-
   }
 
   isLoggedIn(): boolean {
