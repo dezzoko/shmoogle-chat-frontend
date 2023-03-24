@@ -46,7 +46,7 @@ const StatusSelect: FC<StatusSelectProps> = memo((props: StatusSelectProps) => {
   }
 
   return (
-    <StyledStatusSelect>
+    <StyledStatusSelect onClick={onClick}>
       {renderSwitch(user.statusId)}
       <StatusSelectButton>
         <ListCheckbox onChecked={onClick} initialValue={isOpen} />

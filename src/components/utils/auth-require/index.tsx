@@ -10,7 +10,6 @@ async function refreshTokens() {
 }
 
 const AuthRequire: FC<PropsWithChildren> = ({ children }) => {
-
   const [isRefreshTried, setRefreshTried] = useState(false);
 
   const navigate = useNavigate();
