@@ -1,6 +1,5 @@
 import { Avatar, Button, Modal } from 'components/ui';
 import TextArea from 'components/ui/textArea';
-import { SERVER_AVATARS_URL } from 'core/constants/api';
 import { routes } from 'core/constants/routes';
 import { User } from 'core/entities/user.entity';
 import { FC, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -47,12 +46,10 @@ const UserProfile: FC<UserProfileProps> = memo((props: UserProfileProps) => {
 
       dispatch(setLoggedUser({ ...user, username: userName! } as User));
       setEditable(!isEditable);
-    } else {
-      if (!usernameTheSameValid) {
-        setEditable(!isEditable);
-      } else {
-        return;
-      }
+      return;
+    }
+    if (!usernameTheSameValid) {
+      setEditable(!isEditable);
     }
   };
   const quitModalHandler = () => {
@@ -98,7 +95,7 @@ const UserProfile: FC<UserProfileProps> = memo((props: UserProfileProps) => {
         <StyledInfoContainer>
           <Avatar
             size="60px"
-            src={SERVER_AVATARS_URL + user?.avatarUrl}
+            src={user?.avatarUrl}
             label={user?.username[0] || 'U'}
             onClick={changeAvatarModalHandler}
           ></Avatar>

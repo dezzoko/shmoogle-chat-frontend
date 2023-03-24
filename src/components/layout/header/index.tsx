@@ -17,7 +17,6 @@ import OptionsList from 'components/layout/header/options';
 import SearchInput from '../../search-input';
 import { RoundButton, Modal, Tooltip, Avatar, FloatingMenu } from 'components/ui';
 import UserProfile from './user-profile';
-import { SERVER_AVATARS_URL } from 'core/constants/api';
 
 const Header: FC = memo(() => {
   const dispatch = useAppDispatch();
@@ -99,7 +98,7 @@ const Header: FC = memo(() => {
             >
               <Tooltip text={`Аккаунт Shmoogle\n${user?.username}\n${user?.login}`}>
                 <RoundButton size="32px" padding="4px" onClick={(e: any) => setProfileHidden(!isProfileHidden)}>
-                  <Avatar src={SERVER_AVATARS_URL + user?.avatarUrl} label={user?.username[0] || 'U'} />
+                  <Avatar src={user?.avatarUrl} label={user?.username[0] || 'U'} />
                 </RoundButton>
               </Tooltip>
             </FloatingMenu>

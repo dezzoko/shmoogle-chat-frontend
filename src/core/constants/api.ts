@@ -2,7 +2,6 @@
 export const SERVER_URL = 'http://localhost:3000/v1/';
 export const SERVER_SOCKET_URL = 'http://localhost:8080/chat';
 export const SERVER_SIGNALING_URL = 'http://localhost:8080/signal';
-export const SERVER_AVATARS_URL = 'http://localhost:3000/avatars/';
 
 export enum ClientEvents {
   NEW_MESSAGE = 'NEW_MESSAGE',

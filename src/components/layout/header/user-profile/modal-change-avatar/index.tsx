@@ -1,11 +1,10 @@
 import { Avatar, Button, Modal } from 'components/ui';
-import { SERVER_AVATARS_URL } from 'core/constants/api';
 import { User } from 'core/entities/user.entity';
-import { Dispatch, FC, memo, SetStateAction, useEffect, useRef, useState } from 'react';
+import { FC, memo, useEffect, useRef, useState } from 'react';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { UserService } from 'shared/services/user.service';
 import { userActions } from 'shared/store/reducers/user.slice';
-import { ButtonsContainer } from '../modal-quit-message/styled';
+import { backendUserToEntityFactory } from 'shared/utils/factories';
 import { AvatarChangeContainer } from './styled';
 
 interface ModalChangeAvatar {
@@ -13,7 +12,7 @@ interface ModalChangeAvatar {
   setChangeAvatarModalHidden: () => void;
   user: User | null;
 }
-
+//TODO:Make input workable
 const ModalChangeAvatar: FC<ModalChangeAvatar> = memo((props: ModalChangeAvatar) => {
   const { isChangeAvatarModalHidden, setChangeAvatarModalHidden, user } = props;
   const [image, setImage] = useState<any>();
@@ -62,11 +61,14 @@ const ModalChangeAvatar: FC<ModalChangeAvatar> = memo((props: ModalChangeAvatar)
   };
   const submitHandler = async () => {
     const formData = new FormData();
-    formData.append('avatarUrl', image);
+    formData.append('avatar', image);
     const updatedUser = await UserService.Instance.updateAvatar(formData);
-    console.log(updatedUser);
 
-    dispatch(setLoggedUser(updatedUser as User));
+    dispatch(setLoggedUser(backendUserToEntityFactory(updatedUser as User)));
+
+    setChangeAvatarModalHidden();
+  };
+  const cancelHandler = () => {
     setChangeAvatarModalHidden();
   };
 
@@ -76,7 +78,7 @@ const ModalChangeAvatar: FC<ModalChangeAvatar> = memo((props: ModalChangeAvatar)
         <Avatar
           size="160px"
           ref={avatarRef}
-          src={imageURL || SERVER_AVATARS_URL + user?.avatarUrl}
+          src={imageURL || user?.avatarUrl}
           label={user?.username[0] || 'U'}
           onDrop={handleDrop}
           onDragEnter={handleDragEmpty}
@@ -84,7 +86,6 @@ const ModalChangeAvatar: FC<ModalChangeAvatar> = memo((props: ModalChangeAvatar)
         />
         <input
           onClick={onClickHandler}
-          ref={imgRef}
           type="file"
           id="upload-avatar"
           style={{
@@ -101,7 +102,7 @@ const ModalChangeAvatar: FC<ModalChangeAvatar> = memo((props: ModalChangeAvatar)
         ) : (
           <>
             <Button name="Сохранить" isHoverHighlighted onClick={submitHandler} />
-            <Button name="Отмена" color={'red'} isHoverHighlighted />
+            <Button name="Отмена" color={'red'} isHoverHighlighted onClick={cancelHandler} />
           </>
         )}
       </AvatarChangeContainer>

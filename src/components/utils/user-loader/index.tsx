@@ -5,6 +5,8 @@ import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { SpinnerContainer } from './styled';
 import Spinner from 'components/ui/spinner';
+import { Navigate } from 'react-router-dom';
+import { routes } from 'core/constants/routes';
 
 const UserLoader: FC<PropsWithChildren> = (props: PropsWithChildren) => {
   const { children } = props;
@@ -24,7 +26,8 @@ const UserLoader: FC<PropsWithChildren> = (props: PropsWithChildren) => {
           <Spinner />
         </SpinnerContainer>
       )}
-      {isUserError && <div>Cannot retrieve user</div>}
+
+      {isUserError && <Navigate to={routes.auth} />}
     </>
   );
 };

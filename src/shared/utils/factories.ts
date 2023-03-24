@@ -28,6 +28,6 @@ export function backendChatToEntityFactory(backendChat: BackendChat) {
 }
 
 export function backendUserToEntityFactory(backendUser: BackendUser) {
-  const user: User = { ...backendUser };
+  const user: User = { ...backendUser, avatarUrl: `http://localhost:3000/v1/user/${backendUser.id}/avatar/` };
   return user;
 }
