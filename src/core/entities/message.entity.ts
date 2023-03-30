@@ -11,7 +11,7 @@ export class Message {
     public creationDate: string,
     public responses: Message[],
     public files?: File[],
-    public responseToId?: number | null,
+    public responseToId?: string | null,
     public isModified?: boolean,
   ) {}
 }

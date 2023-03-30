@@ -7,13 +7,15 @@ import { BackendUser } from 'core/types/backend/backend-user';
 
 export function backendMessageToEntityFactory(backendMessage: BackendMessage) {
   let responses: Message[] = [];
+
   if (!backendMessage.isResponseToId && backendMessage.responses && backendMessage.responses.length) {
     responses = backendMessage.responses.map((message) => backendMessageToEntityFactory(message));
   }
 
   const message: Message = {
     ...backendMessage,
-    user: backendMessage.creatorId,
+    user: backendUserToEntityFactory(backendMessage.creatorId),
+    responseToId: backendMessage.isResponseToId,
     creationDate: backendMessage.createdAt.toString(),
     responses,
   };

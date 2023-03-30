@@ -56,7 +56,6 @@ const ChatRoomForm: FC<ChatRoomFormProps> = memo((props: ChatRoomFormProps) => {
     }
     setFile([]);
     setImageUrl([]);
-    console.log(files);
 
     setValue('');
   };

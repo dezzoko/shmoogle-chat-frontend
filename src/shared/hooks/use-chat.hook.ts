@@ -23,14 +23,28 @@ export function useChat(chatId: string) {
 
   const newMessageHandler = (chatId: string, backendMessage: BackendMessage) => {
     if (!chat || chat.id !== chatId) return;
-    //TODO: add responses
+
     const newMessage: Message = backendMessageToEntityFactory(backendMessage);
+
+    if (newMessage.responseToId) {
+      setMessages((prevMessages) => {
+        const responseTo = prevMessages.find((message) => message.id === newMessage.responseToId);
+        if (responseTo) {
+          const index = prevMessages.indexOf(responseTo);
+          const newResponseTo = JSON.parse(JSON.stringify(responseTo));
+          newResponseTo.responses = [...responseTo.responses, newMessage];
+
+          return [...prevMessages.slice(0, index), newResponseTo, ...prevMessages.slice(index + 1)];
+        }
+        return prevMessages;
+      });
+    }
+
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
   const sendMessage = async (sendMessageDto: SendMessageDto) => {
     if (!chatSocketEmitter.isConnected() || !user) return;
-
     const files = sendMessageDto.files;
     let message;
     if (!files || !files.length) {
@@ -47,6 +61,7 @@ export function useChat(chatId: string) {
     try {
       const uploadedFiles = await uploadFiles(formData);
       message = { ...sendMessageDto, chatId, creatorId: user.id, files: uploadedFiles.map((file) => file.name) };
+
       chatSocketEmitter.emit(ServerEvents.SEND_MESSAGE, message);
     } catch (error) {
       alert(error);

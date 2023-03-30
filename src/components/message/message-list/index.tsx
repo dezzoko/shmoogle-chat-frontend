@@ -15,17 +15,18 @@ import MessageActions from '../message-actions';
 interface MessageListProps {
   messages: Message[];
   chat?: Chat;
+  showResponses?: boolean;
 }
 
 const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
-  const { messages, chat } = props;
+  const { messages, chat, showResponses } = props;
 
   const dispatch = useAppDispatch();
   const [theme] = useAppTheme();
 
   const { messageId } = useAppSelector((state) => state.chatRoomReducer);
   const { setHighlightedMessage } = chatRoomActions;
-
+  console.log(showResponses, messages);
   const highlightedMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
   return (
     <MessageContainer>
       {messages
-        .filter((message) => !message.responseToId)
+        .filter((message) => !message.responseToId || showResponses)
         .map((message, index, filteredMessages) => {
           let isStacked = false;
           let showDate = true;

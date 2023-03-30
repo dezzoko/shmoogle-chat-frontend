@@ -69,8 +69,6 @@ const ChatRoom: FC<ChatRoomProps> = memo((props: ChatRoomProps) => {
 
   const sendClickHandler = () => {
     sendMessage({ text: formText, files });
-    setFormText('');
-    setFiles([]);
   };
   return (
     <StyledChatRoom>

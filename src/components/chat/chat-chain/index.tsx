@@ -1,7 +1,9 @@
+import MessageActions from 'components/message/message-actions';
 import MessageList from 'components/message/message-list';
 import MessageListItem from 'components/message/message-list-item';
-import { FC, useState } from 'react';
-import { useChat } from 'shared/hooks/use-chat.hook';
+import { Message } from 'core/entities/message.entity';
+import { FC, memo, useEffect, useState } from 'react';
+import { SendMessageDto, useChat } from 'shared/hooks/use-chat.hook';
 import ChatRoom from '../chat-room';
 import ChatRoomForm from '../chat-room/chat-form';
 import { ChatChainContent, ChatChainHeader, ChatChainResponses, StyledChatChain } from './styled';
@@ -11,13 +13,22 @@ interface ChatChainProps {
   messageId: string;
 }
 
-export const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
+const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
   const { chatId, messageId } = props;
-  const { chat, messages } = useChat(chatId);
+  const { chat, messages, sendMessage } = useChat(chatId);
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-
+  const [chainRootResponses, setChainRootResponses] = useState<Message[] | []>([]);
   const chainRoot = messages.find((message) => message.id === messageId);
+
+  useEffect(() => {
+    console.log(chainRoot?.responses);
+
+    if (chainRoot?.responses) {
+      setChainRootResponses(chainRoot?.responses);
+      console.log(chainRootResponses);
+    }
+  }, []);
 
   if (!chainRoot || chainRoot.responseToId) {
     return null;
@@ -32,7 +43,7 @@ export const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
   };
 
   const sendHandler = () => {
-    alert(text);
+    sendMessage({ text, files, isResponseToId: messageId } as SendMessageDto);
   };
 
   return (
@@ -50,7 +61,7 @@ export const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
           </span>
           <hr />
         </ChatChainResponses>
-        <MessageList messages={chainRoot.responses} />
+        <MessageList messages={chainRoot.responses} showResponses={true} />
         <ChatRoomForm onSendClick={sendHandler} onChangeFiles={filesChangeHandler} onChange={textChangeHandler} />
       </ChatChainContent>
     </StyledChatChain>
@@ -59,4 +70,4 @@ export const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
 
 ChatChain.displayName = 'ChatChain';
 
-export default ChatChain;
+export default memo(ChatChain);
