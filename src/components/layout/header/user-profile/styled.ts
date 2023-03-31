@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
 export const StyledUserContainer = styled.div`
-  position: absolute;
-  top: 3.5em;
-  right: -2em;
   padding: 10px;
   border-radius: 15px;
   background: ${({ theme }) => theme.block.background};

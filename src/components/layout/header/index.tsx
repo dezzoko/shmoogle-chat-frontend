@@ -17,6 +17,7 @@ import OptionsList from 'components/layout/header/options';
 import SearchInput from '../../search-input';
 import { RoundButton, Modal, Tooltip, Avatar, FloatingMenu } from 'components/ui';
 import UserProfile from './user-profile';
+import StatusMenu from './status-menu';
 
 const Header: FC = memo(() => {
   const dispatch = useAppDispatch();
@@ -59,9 +60,10 @@ const Header: FC = memo(() => {
             </SearchInputContainer>
             <Tooltip text="Изменить статус">
               <FloatingMenu
+                marginTop="3.7em"
                 element={
                   <>
-                    <UserProfile user={user} isProfileHidden={isProfileHidden} />
+                    <StatusMenu setHidden={setStatusMenuHidden} />
                   </>
                 }
                 isHidden={isStatusMenuHidden}
@@ -92,6 +94,8 @@ const Header: FC = memo(() => {
               </RoundButton>
             </Tooltip>
             <FloatingMenu
+              marginLeft="-11em"
+              marginTop="3.7em"
               element={<UserProfile user={user} isProfileHidden={isProfileHidden} />}
               isHidden={isProfileHidden}
               setHidden={setProfileHidden}
