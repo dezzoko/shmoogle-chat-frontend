@@ -2,7 +2,6 @@ import { OnlineIcon } from 'components/status-select/styled';
 import ChoosenStatusSvg from 'components/svg/choosen-status-svg';
 import NoBotherSvg from 'components/svg/no-bother-svg';
 import OfflineSvg from 'components/svg/offline-svg';
-import { OptionRadio } from 'components/ui';
 import TextArea from 'components/ui/textArea';
 import { User } from 'core/entities/user.entity';
 import { ChangeEvent, Dispatch, FC, ReactNode, SetStateAction, useId, useState } from 'react';
@@ -11,14 +10,7 @@ import { useAppSelector } from 'shared/hooks/app-selector.hook';
 import { UserService } from 'shared/services/user.service';
 import { userActions } from 'shared/store/reducers/user.slice';
 import { backendUserToEntityFactory } from 'shared/utils/factories';
-import {
-  StatusCase,
-  StatusCredit,
-  StatusMenuContainer,
-  StatusRadioIcon,
-  StatusRadioLabel,
-  StyledStatusRadio,
-} from './styled';
+import { StatusCase, StatusCredit, StatusMenuContainer, StatusRadioLabel, StyledStatusRadio } from './styled';
 export enum StatusOption {
   online = 1,
   noborther,
