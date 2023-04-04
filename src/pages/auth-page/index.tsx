@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { ImageContainer, LoginWrapper } from './styled';
 import logo from 'assets/google_logo.png';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthForm } from 'components/auth/auth-form';
 import { AuthChoice } from 'components/auth/auth-choice';
 import { routes } from 'core/constants/routes';
@@ -13,6 +13,9 @@ const AuthPage = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
+  if (AuthService.Instance.isLoggedIn()) {
+    return <Navigate to={routes.home} />;
+  }
   const loginChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLogin(event.target.value);
   };

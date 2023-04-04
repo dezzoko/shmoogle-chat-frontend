@@ -10,6 +10,7 @@ export class Message {
     public text: string,
     public creationDate: string,
     public responses: Message[],
+    public likes?: { value: string; userId: string }[],
     public files?: File[],
     public responseToId?: string | null,
     public isModified?: boolean,

@@ -20,6 +20,8 @@ const AuthRequire: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (!AuthService.Instance.isLoggedIn()) {
+      console.log('IS LOGGED');
+
       refreshTokens()
         .then(() => {
           setRefreshTried(true);

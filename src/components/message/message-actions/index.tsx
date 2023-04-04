@@ -7,6 +7,8 @@ import { FC, ReactNode, useState } from 'react';
 import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
 import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
 import { MessageActionsBox, StyledMessageActions } from './styled';
+import { useChat } from 'shared/hooks/use-chat.hook';
+import { useAppSelector } from 'shared/hooks/app-selector.hook';
 
 interface MessageActionsProps {
   message: Message;
@@ -15,6 +17,8 @@ interface MessageActionsProps {
 
 const MessageActions: FC<MessageActionsProps> = (props: MessageActionsProps) => {
   const { message, children } = props;
+  const { sendLike } = useChat(message.chatId);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
@@ -23,11 +27,12 @@ const MessageActions: FC<MessageActionsProps> = (props: MessageActionsProps) => 
   const setIsVisibleTrue = () => {
     setIsVisible(true);
   };
-
+  const sendLikeHandler = () => {
+    sendLike({ messageId: message.id, value: '1' });
+  };
   const setIsVisibleFalse = () => {
     setIsVisible(false);
   };
-
   const responseHandler = () => {
     dispatch(setResponseToId(message.id));
     dispatch(setChatChainsOpened(true));
@@ -37,7 +42,7 @@ const MessageActions: FC<MessageActionsProps> = (props: MessageActionsProps) => 
     <StyledMessageActions onMouseEnter={setIsVisibleTrue} onMouseLeave={setIsVisibleFalse}>
       <MessageActionsBox isVisible={isVisible}>
         <Tooltip text="Отреагировать">
-          <RoundButton size="24px" padding="4px">
+          <RoundButton size="24px" padding="4px" onClick={sendLikeHandler}>
             <SmileSvg />
           </RoundButton>
         </Tooltip>

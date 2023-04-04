@@ -19,6 +19,7 @@ export enum ServerEvents {
   INVITE_TO_CHAT = 'INVITE_TO_CHAT',
   CREATE_CHAT = 'CREATE_CHAT',
   CHANGE_HISTORY = 'CHANGE_HISTORY',
+  SEND_LIKE = 'SEND_LIKE',
 }
 
 export const RTC_CONFIG: RTCConfiguration = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };

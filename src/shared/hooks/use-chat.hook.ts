@@ -7,6 +7,7 @@ import { MessageService } from 'shared/services/message.service';
 import { backendMessageToEntityFactory } from 'shared/utils/factories';
 import { useAppSelector } from './app-selector.hook';
 import { chatSocketEmitter } from 'shared/emitters/socket-emitter';
+import { BackendLike } from 'core/types/backend/backend-like';
 
 async function uploadFiles(data: FormData) {
   return MessageService.Instance.uploadFiles(data);
@@ -41,6 +42,29 @@ export function useChat(chatId: string) {
     }
 
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  const newLike = (chatId: string, backendLike: BackendLike) => {
+    if (!chat || chat.id !== chatId) return;
+    setMessages((prevMessages) => {
+      const likedMessage = prevMessages.find((message) => message.id === backendLike.messageId);
+      if (!likedMessage) return [...prevMessages];
+      const index = prevMessages.indexOf(likedMessage);
+      const newLikedMessage = JSON.parse(JSON.stringify(likedMessage));
+      const like = { userId: backendLike.userId, value: backendLike.value };
+      newLikedMessage.likes.push(like);
+
+      return [...prevMessages.slice(0, index), newLikedMessage, ...prevMessages.slice(index + 1)];
+    });
+  };
+
+  const sendLike = async (sendLikeDto: SendLikeDto) => {
+    if (!chatSocketEmitter.isConnected() || !user) return;
+    const likedMessage = messages.find((message) => message.id === sendLikeDto.messageId);
+    if (!likedMessage) return;
+    const like = { ...sendLikeDto, chatId, userId: user.id };
+    chatSocketEmitter.emit(ServerEvents.SEND_LIKE, like);
+    return;
   };
 
   const sendMessage = async (sendMessageDto: SendMessageDto) => {
@@ -91,11 +115,16 @@ export function useChat(chatId: string) {
       });
   }, [chatId]);
 
-  return { chat, messages, sendMessage, isMessagesLoading, isMessagesError };
+  return { chat, messages, sendMessage, sendLike, isMessagesLoading, isMessagesError };
 }
 
 export interface SendMessageDto {
   text: string;
   files?: File[];
   isResponseToId?: string;
+}
+
+export interface SendLikeDto {
+  messageId: string;
+  value: string;
 }
