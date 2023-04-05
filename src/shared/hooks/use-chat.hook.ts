@@ -26,33 +26,36 @@ export function useChat(chatId: string) {
     if (!chat || chat.id !== chatId) return;
 
     const newMessage: Message = backendMessageToEntityFactory(backendMessage);
+    // if (newMessage.responseToId) {
+    //   setMessages((prevMessages) => {
+    //     const responseTo = prevMessages.find((message) => message.id === newMessage.responseToId);
+    //     if (responseTo) {
+    //       const index = prevMessages.indexOf(responseTo);
+    //       const newResponseTo = JSON.parse(JSON.stringify(responseTo));
+    //       newResponseTo.responses = [...responseTo.responses, newMessage];
 
-    if (newMessage.responseToId) {
-      setMessages((prevMessages) => {
-        const responseTo = prevMessages.find((message) => message.id === newMessage.responseToId);
-        if (responseTo) {
-          const index = prevMessages.indexOf(responseTo);
-          const newResponseTo = JSON.parse(JSON.stringify(responseTo));
-          newResponseTo.responses = [...responseTo.responses, newMessage];
-
-          return [...prevMessages.slice(0, index), newResponseTo, ...prevMessages.slice(index + 1)];
-        }
-        return prevMessages;
-      });
-    }
-
+    //       return [...prevMessages.slice(0, index), newResponseTo, ...prevMessages.slice(index + 1)];
+    //     }
+    //     return prevMessages;
+    //   });
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
-  const newLike = (chatId: string, backendLike: BackendLike) => {
+  const newLikeHandler = (chatId: string, backendLike: BackendLike) => {
     if (!chat || chat.id !== chatId) return;
+
     setMessages((prevMessages) => {
       const likedMessage = prevMessages.find((message) => message.id === backendLike.messageId);
+      console.log(likedMessage);
+
       if (!likedMessage) return [...prevMessages];
       const index = prevMessages.indexOf(likedMessage);
       const newLikedMessage = JSON.parse(JSON.stringify(likedMessage));
       const like = { userId: backendLike.userId, value: backendLike.value };
+
+      if (!newLikedMessage.likes) newLikedMessage.likes = [];
       newLikedMessage.likes.push(like);
+      console.log(newLikedMessage);
 
       return [...prevMessages.slice(0, index), newLikedMessage, ...prevMessages.slice(index + 1)];
     });
@@ -95,9 +98,11 @@ export function useChat(chatId: string) {
 
   useEffect(() => {
     chatSocketEmitter.subscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
+    chatSocketEmitter.subscribe(ClientEvents.NEW_LIKE, newLikeHandler);
 
     return () => {
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
+      chatSocketEmitter.unsubscribe(ClientEvents.NEW_LIKE, newLikeHandler);
     };
   }, [chatId, chatSocketEmitter.clientSocket]);
 
@@ -107,6 +112,8 @@ export function useChat(chatId: string) {
 
     MessageService.Instance.getByChatId(chatId)
       .then((fetchedMessages) => {
+        console.log('FETCHED MESSAGES ', fetchedMessages);
+
         setMessages(fetchedMessages);
         setMessagesLoading(false);
       })

@@ -7,22 +7,26 @@ import { JWT_ACCESS_TOKEN } from 'core/constants/tokens';
 export class SocketEmitter extends Emitter {
   clientSocket: Socket | null = null;
 
-  constructor(connectionUrl: string, options?: Partial<ManagerOptions & SocketOptions>) {
+  constructor(private connectionUrl: string, private options?: Partial<ManagerOptions & SocketOptions>) {
     super();
-    this.clientSocket = io(connectionUrl, options);
   }
-
   public subscribe(event: string, callback: (...args: any) => void): this {
-    if (this.clientSocket) {
-      this.clientSocket.on(event, callback);
+    if (!this.clientSocket) {
+      this.clientSocket = io(this.connectionUrl, this.options);
     }
+
+    this.clientSocket.on(event, callback);
+
     return this;
   }
 
   public emit(event: string, ...args: any): this {
-    if (this.clientSocket) {
-      this.clientSocket.emit(event, ...args);
+    if (!this.clientSocket) {
+      this.clientSocket = io(this.connectionUrl, this.options);
     }
+
+    this.clientSocket.emit(event, ...args);
+
     return this;
   }
 

@@ -28,7 +28,6 @@ export function useChats() {
 
   const newChatHandler = (backendChat: BackendChat) => {
     const newChat: Chat = backendChatToEntityFactory(backendChat);
-    console.log('NEW_CHAT', newChat);
     dispatch(setUserChats([...chats, newChat]));
   };
 
@@ -47,7 +46,7 @@ export function useChats() {
         .unsubscribe(ClientEvents.NEW_CHATS, newChatsHandler)
         .unsubscribe(ClientEvents.NEW_CHAT, newChatHandler);
     };
-  }, [chatSocketEmitter.clientSocket]);
+  }, [chatSocketEmitter.clientSocket, chats]);
 
   useEffect(() => {
     if (chatSocketEmitter.isConnected() && user) {

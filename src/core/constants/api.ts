@@ -10,6 +10,7 @@ export enum ClientEvents {
   NEW_CHATS = 'NEW_CHATS',
   NEW_CHAT = 'NEW_CHAT',
   ERROR = 'ERROR',
+  NEW_LIKE = 'NEW_LIKE',
 }
 
 export enum ServerEvents {

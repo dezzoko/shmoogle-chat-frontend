@@ -7,7 +7,6 @@ import { BackendUser } from 'core/types/backend/backend-user';
 
 export function backendMessageToEntityFactory(backendMessage: BackendMessage) {
   let responses: Message[] = [];
-
   if (!backendMessage.isResponseToId && backendMessage.responses && backendMessage.responses.length) {
     responses = backendMessage.responses.map((message) => backendMessageToEntityFactory(message));
   }
@@ -30,6 +29,10 @@ export function backendChatToEntityFactory(backendChat: BackendChat) {
 }
 
 export function backendUserToEntityFactory(backendUser: BackendUser) {
-  const user: User = { ...backendUser, avatarUrl: `http://localhost:3000/v1/user/${backendUser.id}/avatar/` };
+  let avatarUrl;
+  if (backendUser.avatarUrl) {
+    avatarUrl = `http://localhost:3000/v1/user/${backendUser.id}/avatar/`;
+  }
+  const user: User = { ...backendUser, avatarUrl };
   return user;
 }

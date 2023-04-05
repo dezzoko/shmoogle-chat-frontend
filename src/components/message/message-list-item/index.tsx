@@ -1,4 +1,4 @@
-import { FC, ForwardedRef, forwardRef, memo } from 'react';
+import { FC, ForwardedRef, forwardRef, memo, useId } from 'react';
 
 import { Message } from 'core/entities/message.entity';
 import { transformDate } from 'shared/utils/transform-date';
@@ -24,7 +24,7 @@ interface MessageListItemProps {
 const MessageListItem: FC<MessageListItemProps> = forwardRef<HTMLDivElement, MessageListItemProps>(
   (props: MessageListItemProps, ref) => {
     const { message, isManager, onlyText } = props;
-
+    const id = useId();
     const [relative, time, , monthDay, monthString] = transformDate(message.creationDate);
     const readableDate = `${monthDay} ${monthString.slice(0, 3)}., ${time}`;
 
@@ -53,6 +53,13 @@ const MessageListItem: FC<MessageListItemProps> = forwardRef<HTMLDivElement, Mes
                 <MessageFile key={f.id} file={f} />
               ))}
             </MessageFileContainer>
+          )}
+          {message.likes && (
+            <div>
+              {message.likes.map((l) => (
+                <div key={l.userId + l.value}>{l.value}</div>
+              ))}
+            </div>
           )}
         </div>
       </MessageWrapper>

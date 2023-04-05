@@ -26,7 +26,6 @@ const MessageList: FC<MessageListProps> = memo((props: MessageListProps) => {
 
   const { messageId } = useAppSelector((state) => state.chatRoomReducer);
   const { setHighlightedMessage } = chatRoomActions;
-  console.log(showResponses, messages);
   const highlightedMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

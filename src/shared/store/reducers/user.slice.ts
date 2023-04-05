@@ -27,7 +27,7 @@ export const userSlice = createSlice({
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     fetchUserChats(state) {},
-
+    //
     setLoggedUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
       state.isUserLoading = false;

@@ -20,13 +20,11 @@ const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const [chainRootResponses, setChainRootResponses] = useState<Message[] | []>([]);
   const chainRoot = messages.find((message) => message.id === messageId);
+  const responses = messages.filter((m) => m.responseToId === messageId);
 
   useEffect(() => {
-    console.log(chainRoot?.responses);
-
     if (chainRoot?.responses) {
       setChainRootResponses(chainRoot?.responses);
-      console.log(chainRootResponses);
     }
   }, []);
 
@@ -61,7 +59,7 @@ const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
           </span>
           <hr />
         </ChatChainResponses>
-        <MessageList messages={chainRoot.responses} showResponses={true} />
+        <MessageList messages={responses} showResponses={true} />
         <ChatRoomForm onSendClick={sendHandler} onChangeFiles={filesChangeHandler} onChange={textChangeHandler} />
       </ChatChainContent>
     </StyledChatChain>
