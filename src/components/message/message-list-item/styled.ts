@@ -8,8 +8,7 @@ export const MessageWrapper = styled.div<MessageWrapperProps>`
 
 export const MessageUserAvatar = styled.div<Hideable>`
   display: ${(props) => (props.hidden ? 'none' : 'inherit')};
-  position: absolute;
-  margin-left: -40px;
+  padding-right: 10px;
 `;
 
 export const MessageInfo = styled.div<Hideable>`

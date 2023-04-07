@@ -61,6 +61,36 @@ export function useChat(chatId: string) {
     });
   };
 
+  const deleteLikeHandler = (chatId: string, backendLike: BackendLike) => {
+    if (!chat || chat.id !== chatId) return;
+
+    setMessages((prevMessages) => {
+      const unLikedMessage = prevMessages.find((message) => message.id === backendLike.messageId);
+
+      if (!unLikedMessage) return [...prevMessages];
+      const index = prevMessages.indexOf(unLikedMessage);
+      const newUnLikedMessage = JSON.parse(JSON.stringify(unLikedMessage));
+
+      if (!newUnLikedMessage.likes) return [...prevMessages];
+      const deleteLikeIndex = newUnLikedMessage.likes.findIndex(
+        (like: { userId: string; value?: string }) => like.userId === backendLike.userId,
+      );
+      newUnLikedMessage.likes.splice(deleteLikeIndex);
+      console.log(newUnLikedMessage);
+
+      return [...prevMessages.slice(0, index), newUnLikedMessage, ...prevMessages.slice(index + 1)];
+    });
+  };
+
+  const deleteLike = async (messageId: string) => {
+    if (!chatSocketEmitter.isConnected() || !user) return;
+    const likedMessage = messages.find((message) => message.id === messageId);
+    if (!likedMessage) return;
+    const like = { chatId, userId: user.id, messageId };
+    chatSocketEmitter.emit(ServerEvents.DELETE_LIKE, like);
+    return;
+  };
+
   const sendLike = async (sendLikeDto: SendLikeDto) => {
     if (!chatSocketEmitter.isConnected() || !user) return;
     const likedMessage = messages.find((message) => message.id === sendLikeDto.messageId);
@@ -99,10 +129,12 @@ export function useChat(chatId: string) {
   useEffect(() => {
     chatSocketEmitter.subscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
     chatSocketEmitter.subscribe(ClientEvents.NEW_LIKE, newLikeHandler);
+    chatSocketEmitter.subscribe(ClientEvents.DELETE_LIKE, deleteLikeHandler);
 
     return () => {
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_MESSAGE, newMessageHandler);
       chatSocketEmitter.unsubscribe(ClientEvents.NEW_LIKE, newLikeHandler);
+      chatSocketEmitter.unsubscribe(ClientEvents.DELETE_LIKE, deleteLikeHandler);
     };
   }, [chatId, chatSocketEmitter.clientSocket]);
 
@@ -122,7 +154,7 @@ export function useChat(chatId: string) {
       });
   }, [chatId]);
 
-  return { chat, messages, sendMessage, sendLike, isMessagesLoading, isMessagesError };
+  return { chat, messages, sendMessage, sendLike, deleteLike, isMessagesLoading, isMessagesError };
 }
 
 export interface SendMessageDto {

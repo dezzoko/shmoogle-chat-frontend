@@ -11,6 +11,7 @@ export enum ClientEvents {
   NEW_CHAT = 'NEW_CHAT',
   ERROR = 'ERROR',
   NEW_LIKE = 'NEW_LIKE',
+  DELETE_LIKE = 'DELETE_LIKE',
 }
 
 export enum ServerEvents {
@@ -20,6 +21,7 @@ export enum ServerEvents {
   INVITE_TO_CHAT = 'INVITE_TO_CHAT',
   CREATE_CHAT = 'CREATE_CHAT',
   CHANGE_HISTORY = 'CHANGE_HISTORY',
+  DELETE_LIKE = 'DELETE_LIKE',
   SEND_LIKE = 'SEND_LIKE',
 }
 

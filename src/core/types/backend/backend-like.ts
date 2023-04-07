@@ -1,5 +1,5 @@
 export interface BackendLike {
   userId: string;
-  value: string;
+  value?: string;
   messageId: string;
 }

@@ -7,6 +7,11 @@ import { SendMessageDto, useChat } from 'shared/hooks/use-chat.hook';
 import ChatRoom from '../chat-room';
 import ChatRoomForm from '../chat-room/chat-form';
 import { ChatChainContent, ChatChainHeader, ChatChainResponses, StyledChatChain } from './styled';
+import { chatRoomActions } from 'shared/store/reducers/chat-room.slice';
+import { useAppSelector } from 'shared/hooks/app-selector.hook';
+import CrossSvg from 'components/svg/cross-svg';
+import { useAppDispatch } from 'shared/hooks/app-dispatch.hook';
+import { RoundButton } from 'components/ui';
 
 interface ChatChainProps {
   chatId: string;
@@ -21,6 +26,8 @@ const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
   const [chainRootResponses, setChainRootResponses] = useState<Message[] | []>([]);
   const chainRoot = messages.find((message) => message.id === messageId);
   const responses = messages.filter((m) => m.responseToId === messageId);
+  const dispatch = useAppDispatch();
+  const { setChatChainsOpened } = chatRoomActions;
 
   useEffect(() => {
     if (chainRoot?.responses) {
@@ -48,6 +55,9 @@ const ChatChain: FC<ChatChainProps> = (props: ChatChainProps) => {
     <StyledChatChain>
       <ChatChainHeader>
         <h3>Активная цепочка</h3>
+        <RoundButton size="24px" padding="4px" onClick={() => dispatch(setChatChainsOpened(false))}>
+          <CrossSvg />
+        </RoundButton>
       </ChatChainHeader>
       <ChatChainContent>
         <MessageListItem message={chainRoot} />
